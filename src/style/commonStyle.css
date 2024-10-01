@@ -1,6 +1,76 @@
 /*모든 공통 스타일은 c_로 시작합니다.
 class 명에 추가해서 사용해 주세요!*/
 
+/* font 추가 */
+@font-face {
+    font-family: 'GmarketSansMedium';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansMedium.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+
 body {
     padding: 3rem 5rem;
+    font-family: "GmarketSansMedium";
+}
+
+
+/* button style */
+.c_button {
+    margin: 20px;
+    border: unset;
+    border-radius: 10px;
+    background-color: #85c1e9;
+    color: #ffffff;
+    padding: 10px 13px;
+    font-weight: bold;
+
+    &:hover {
+        background-color: #5dade2;
+        cursor: pointer;
+    }
+}
+
+.c_button_s {
+    width: 80px;
+    font-size: 15px;
+}
+
+.c_button_m {
+    width: 130px;
+    font-size: 18px;
+}
+
+.c_button_l {
+    width: 180px;
+    font-size: 22px;
+}
+
+/* card style */
+/*카드의 경우 게임 검색 창에서만 사용 하기에 작업 중반부에 업데이트*/
+
+/* icon style */
+.c_icon_s {
+    width: 30px;
+    height: 30px;
+    margin: 20px;
+}
+
+.c_icon_m {
+    width: 50px;
+    height: 50px;
+    margin: 20px;
+}
+
+.c_icon_l {
+    width: 80px;
+    height: 80px;
+    margin: 20px;
+}
+
+.c_icon_hover {
+    &:hover{
+        cursor: pointer;
+    }
 }
