@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script type="text/javascript" src="hello.js"></script>
+    <style>
+        #modalBtn,
+        #modalCloseBtn {
+            cursor: pointer;
+        }
+
+        #modalContainer {
+            width: 100%;
+            height: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        #modalContent {
+            position: absolute;
+            background-color: #8a9aa7;
+            width: 300px;
+            height: 150px;
+            padding: 15px;
+
+        }
+
+        #modalContainer.hidden {
+            display: none;
+        }
+
+        .main {
+            background-color: greenyellow;
+            width: 200px;
+            height: 400px;
+        }
+    </style>
+
+
+</head>
+
+<body>
+
+
+    <div class="main">
+        <button id="admendBtn">수정</button>
+        <button id="deleteBtn">삭제</button>
+    </div>
+
+    <div id="modalContainer" class="hidden">
+        <div id="modalContent">
+            <p>팀원을 삭제합니다.</p>
+            <div class="modalFooter">
+                <button id="modalCloseBtn">닫기</button>
+                <button id="modalDeleteBtn">삭제</button>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+<script>
+    const deleteBtn = document.getElementById('deleteBtn');
+    const modalCloseBtn = document.getElementById('modalCloseBtn');
+    const modal = document.getElementById('modalContainer');
+
+    deleteBtn.addEventListener('click', () => {
+        modal.classList.remove('hidden');
+    });
+
+    modalCloseBtn.addEventListener('click', () => {
+        modal.classList.add('hidden');
+    });
+</script>
+
+</html>
