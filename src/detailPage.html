@@ -1,15 +1,162 @@
 <!doctype html>
 <html lang="ko">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+    <!--common style, js 파일 import-->
     <link href="style/commonStyle.css" rel="stylesheet" />
-    <link href="js/firebaseSetting.js"/>
-    <title>8World-상세</title>
+    <link href="/Users/t2024-m0173/dev/8world/src/style/detailPageStyle.css" rel="stylesheet" />
+    <title>8Woårld-상세</title>
+
+    <style>
+        .mainFooter {
+            background-color: blue;
+            text-align: center;
+            width: 600px;
+        }
+
+        .link-sns {
+            list-style: none;
+        }
+
+        .btn {
+            text-align: center;
+        }
+    </style>
+
 </head>
+
 <body>
 
+    <div class="main">
+        <div class="title"> 팀원 이름 나오게 </div>
+        <div class="topp"> 일단 크기는 맟줘 </div>
+        <div class="slider">
+            <div class="slides">
+                <span class="item" id="character_image">
+
+                </span>
+            </div>
+        </div>
+        <div class="btn">
+            <button class="c_button" id="mainBtn">Main</button>
+            <button class="c_button" id="admendBtn">수정</button>
+            <button class="c_button" id="deleteBtn">삭제</button>
+
+
+
+            <a href="..."><img class="img-github" src="/Users/t2024-m0173/dev/8world/src/img/icon-github.png"
+                    alt="깃허브 주소" /></a>
+            <a href="...."><img class="img-velog" src="/Users/t2024-m0173/dev/8world/src/img/icon-velog.png"
+                    alt="블로그 주소" /></a>
+        </div>
+
+
+
+    </div>
+    <!-- MODAL   -->
+    <div id="modalContainer" class="hidden">
+        <div id="modalContent">
+            <p>팀원을 삭제합니다.</p>
+            <div class="modalFooter">
+                <button class="c_button" id="modalCloseBtn">닫기</button>
+                <button class="c_button" id="modalDeleteBtn">삭제</button>
+            </div>
+        </div>
+    </div>
+
 </body>
+
+<script type="module">
+
+    // Firebase SDK 라이브러리 가져오기
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
+    import { getFirestore } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+    import { collection, addDoc } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+    import { getDocs } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+
+
+    // Firebase 구성 정보 설정
+    const firebaseConfig = {
+
+        apiKey: "AIzaSyDBzg-CgJ_rurOKVL3QsX14yfRyat4fy6c",
+        authDomain: "world-6960c.firebaseapp.com",
+        projectId: "world-6960c",
+        storageBucket: "world-6960c.appspot.com",
+        messagingSenderId: "892743835529",
+        appId: "1:892743835529:web:b4eef016af8ecfb8884b58"
+
+    };
+
+
+    // Firebase 인스턴스 초기화
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+
+    const deleteBtn = document.getElementById('deleteBtn');
+    const modalCloseBtn = document.getElementById('modalCloseBtn');
+    const modal = document.getElementById('modalContainer');
+
+    deleteBtn.addEventListener('click', () => {
+        modal.classList.remove('hidden');
+    });
+
+    modalCloseBtn.addEventListener('click', () => {
+        modal.classList.add('hidden');
+    });
+
+
+
+    let docs = await getDocs(collection(db, "user"));
+    docs.forEach((doc) => {
+        let row = doc.data();
+        console.log(row);
+    });
+
+    function memberInfo() {
+        let blog_url = $('blog_url').val();
+        let character_image = $('character_image').val();
+        let comment = $('comment').val();
+        let github_url = $('github_url').val();
+        let mbti = $('mbti').val();
+        let name = $('name').val();
+        let image = $('image').val();
+    }
+
+    let Data = memberInfo;
+
+    console.log(Data);
+
+    
+
+
+
+
+
+
+
+    //버튼 관련 이벤트
+    $('#mainBtn').on('click', () => {
+        window.location.href = "/Users/t2024-m0173/dev/8world/src/mainPage.html";
+    });
+
+    $('#admendBtn').on('click', () => {
+
+    }); 
+    
+    $('#deleteBtn').on('click', () => {
+
+    });
+</script>
+</body>
+
 </html>
