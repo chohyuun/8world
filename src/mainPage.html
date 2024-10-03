@@ -42,6 +42,8 @@
     const db = getFirestore(app);
 
     const data = await getDocs(collection(db, "user"));
+    let toastMessage = document.getElementById('toast_message');
+
 
     let userArray = []; // Firebase에서 받아온 데이터 Array로 저장
     let arrayCount = 0; // 현재 위치한 row 확인을 위한 변수
@@ -53,6 +55,23 @@
 
         userArray.push(Object(docs));
     });
+
+    // 없는 사용자일 경우 발생할 사용자 에러 메시지
+    const toastOn=()=>{
+        toastMessage.classList.add('active');
+        setTimeout(function(){
+            toastMessage.classList.remove('active');
+        },1000);
+    }
+
+    const imageClickEvent = (arrayNum) => {
+        if(imageArray[arrayNum] === "assets/images/pngwing.com.png") {
+            toastOn();
+        }
+        else {
+            location.href='detailPage.html';
+        }
+    };
 
     // image tag html에 전달 하는 함수
     const imageArea = () => {
@@ -76,22 +95,37 @@
             }
         }
 
+        const leftImageNum = arrayCount - 1 < 0 ? imageArray.length - 1 : arrayCount - 1;
+        const rightImageNum = arrayCount > imageArray.length - 1 ? 0 : arrayCount + 1;
+
         // 이미지 노출 html
         document.getElementById("character_image").innerHTML = `
                 <div class="image_area ">
-                    <div>
-                        <img src="${imageArray[arrayCount - 1 < 0 ? imageArray.length - 1 : arrayCount - 1]}" class="character_image" alt="..." onclick="location.href='detailPage.html'"/>
+                    <div calss="content">
+                        <img src="${imageArray[leftImageNum]}"
+                            class="character_image toast_btn" id="image_left"/>
                     </div>
 
-                    <div>
-                        <img src="${imageArray[arrayCount]}" class="character_image" alt="..." onclick="location.href='detailPage.html'"/>
+                    <div calss="content">
+                        <img src="${imageArray[arrayCount]}" class="character_image" id="image_middle"/>
                     </div>
 
-                    <div>
-                        <img src="${imageArray[arrayCount + 1]}" class="character_image" alt="..." onclick="location.href='detailPage.html'"/>
+                    <div calss="content">
+                        <img src="${imageArray[rightImageNum]}" class="character_image" id="image_rigth"/>
                     </div>
                 </div>
         `;
+
+        // image click event
+        $('#image_left').on('click', () => {
+            imageClickEvent(leftImageNum);
+        });
+        $('#image_middle').on('click', () => {
+            imageClickEvent(arrayCount);
+        });
+        $('#image_right').on('click', () => {
+            imageClickEvent(rightImageNum);
+        });
     }
 
     //html DOM 생성 완료 후 바로 이미지 노출 되기 위한 코드
@@ -114,10 +148,11 @@
 
     // 이미지 이동 버튼 클릭 이벤트
     $('#left_arrow').on('click', () => {
-        changeImage(-1)
+        changeImage(-1);
     });
+
     $('#right_arrow').on('click', () => {
-        changeImage(1)
+        changeImage(1);
     });
 </script>
 
@@ -125,12 +160,12 @@
     <div class="title">8 World</div>
     <div class="description">8조 8은 안으로 굽조 입니다!</div>
     <div class="slider">
-        <!-- todo: 화살표 이미지로 변환/ 기능 구현  -->
         <button class="c_button c_button_m" id="left_arrow"><</button>
         <span class="item" id="character_image"></span>
         <button class="c_button_m c_button" id="right_arrow">></button>
     </div>
     <button class="c_button c_button_m" onclick="location.href='addPage.html'">팀원 추가</button>
+    <div id="toast_message">없는 사용자 입니다.</div>
 </div>
 
 </body>
