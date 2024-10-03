@@ -10,7 +10,7 @@
 }
 
 .slider {
-    max-width: 100%;
+    min-width: 100%;
     position: relative;
     display: flex;
     flex-direction: row;
@@ -20,17 +20,17 @@
 }
 
 .item {
-    max-width: 1000px;
-    position: relative;
-    margin: auto;
+    width: 100%;
+    display: flex;
+    justify-content: center;
 }
 
-.c_character_image {
+.character_image {
     position: relative;
     top: 0;
     left: 0;
     height: calc(100vh - 300px);
-    width: 500px;
+    margin: 0 40px;
     object-fit: contain;
 }
 
@@ -48,4 +48,11 @@
         background-color: unset;
         color: #727272;
     }
+}
+
+.image_area {
+    width: 100%;
+    display: flex;
+    padding: 0 30px;
+    justify-content: space-between;
 }

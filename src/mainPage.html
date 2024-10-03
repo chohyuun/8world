@@ -18,9 +18,9 @@
 <body>
 <script type="module">
     // todo : 이미지 이동 animation 추가
-    // todo : 이미지 최대 3개까지 표시 css 변경
     // todo : 상세 페이지 이동 시 데이터 전달 기능 구현
     // todo : 현재 페이지 js 파일 분리 작업
+    // todo : 변수명 함수명 재정리
 
     // firebase 호출부
     import {initializeApp} from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
@@ -43,34 +43,68 @@
 
     const data = await getDocs(collection(db, "user"));
 
-    let imageData = []; // Firebase에서 받아온 데이터 Array로 저장
+    let userArray = []; // Firebase에서 받아온 데이터 Array로 저장
     let arrayCount = 0; // 현재 위치한 row 확인을 위한 변수
+    const imageArray = []; // image data
 
     data.forEach((doc) => {
         // db에 존재하는 데이터 Array로 저장
         const docs = doc.data();
 
-        imageData.push(Object(docs));
+        userArray.push(Object(docs));
     });
 
     // image tag html에 전달 하는 함수
     const imageArea = () => {
-        const imageView = `
-            <div class="item">
-                <img src="${imageData[arrayCount]['character_image']}" class="c_character_image" alt="..." onclick="location.href='detailPage.html'"/>
-           </div>
+        if (userArray.length) {
+            if (userArray.length < 3) {
+                for (let i = 0; i < 3; i++) {
+                    if (i < userArray.length) {
+                        imageArray.push(userArray[i].character_image);
+                    } else {
+                        imageArray.push("assets/images/pngwing.com.png");
+                    }
+                }
+            } else {
+                for (let i = 0; i < userArray.length; i++) {
+                    imageArray.push(userArray[i]['character_image']);
+                }
+            }
+        } else {
+            for (let i = 0; i < 3; i++) {
+                imageArray.push("assets/images/pngwing.com.png");
+            }
+        }
+
+        // 이미지 노출 html
+        document.getElementById("character_image").innerHTML = `
+                <div class="image_area ">
+                    <div>
+                        <img src="${imageArray[arrayCount - 1 < 0 ? imageArray.length - 1 : arrayCount - 1]}" class="character_image" alt="..." onclick="location.href='detailPage.html'"/>
+                    </div>
+
+                    <div>
+                        <img src="${imageArray[arrayCount]}" class="character_image" alt="..." onclick="location.href='detailPage.html'"/>
+                    </div>
+
+                    <div>
+                        <img src="${imageArray[arrayCount + 1]}" class="character_image" alt="..." onclick="location.href='detailPage.html'"/>
+                    </div>
+                </div>
         `;
-        document.getElementById("character_image").innerHTML = imageView;
     }
 
-    imageArea();
+    //html DOM 생성 완료 후 바로 이미지 노출 되기 위한 코드
+    $(document).ready(() => {
+        imageArea();
+    })
 
     // 이미지 전환 시 현재 있는 이미지 개수를 넘지 않도록 조정하는 함수
     const changeImage = (moveCount) => {
-        if (imageData.length <= (arrayCount + moveCount)) {
+        if (imageArray.length <= (arrayCount + moveCount)) {
             arrayCount = 0;
         } else if (0 > (arrayCount + moveCount)) {
-            arrayCount = imageData.length - 1;
+            arrayCount = imageArray.length - 1;
         } else {
             arrayCount += moveCount;
         }
@@ -93,10 +127,7 @@
     <div class="slider">
         <!-- todo: 화살표 이미지로 변환/ 기능 구현  -->
         <button class="c_button c_button_m" id="left_arrow"><</button>
-        <div class="slides">
-            <span class="item" id="character_image">
-            </span>
-        </div>
+        <span class="item" id="character_image"></span>
         <button class="c_button_m c_button" id="right_arrow">></button>
     </div>
     <button class="c_button c_button_m" onclick="location.href='addPage.html'">팀원 추가</button>
