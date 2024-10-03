@@ -40,10 +40,10 @@
 .character_image {
     cursor: pointer;
     position: relative;
-    object-fit: cover;
+    object-fit: contain;
     top: 0;
     left: 0;
-    height: 700px;
+    height: 500px;
     width: 350px;
     transform: scale(0.9);
 }

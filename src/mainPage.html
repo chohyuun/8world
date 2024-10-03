@@ -18,9 +18,7 @@
 <body>
 
 <script type="module">
-    // todo : 상세 페이지 이동 시 데이터 전달 기능 구현
     // todo : 현재 페이지 js 파일 분리 작업
-    // todo : 변수명 함수명 재정리
 
     // firebase 호출부
     import {initializeApp} from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
@@ -74,6 +72,17 @@
         if (imageArray[arrayNum] === "assets/images/pngwing.com.png") {
             toastOn();
         } else {
+            characterImageId.addEventListener('click', (e) => {
+                const target = e.target;
+
+                // json 형식으로 클릭한 이미지 데이터 전송
+                for(let i = 0; i < userArray.length; i++){
+                    if (userArray[i]['character_image'] === target.currentSrc) {
+                        localStorage.setItem('characterImage', JSON.stringify(userArray[i]));
+                    }
+                }
+            })
+
             location.href = 'detailPage.html';
         }
     };
