@@ -1,7 +1,6 @@
-
 /* mainPage의 css 입니다. */
 
-.main{
+.main {
     height: calc(100vh - 96px);
     display: flex;
     flex-direction: column;
@@ -17,30 +16,43 @@
     margin: auto;
     align-items: center;
     overflow: hidden;
+    justify-content: center;
+}
+
+.item_area {
+    width: 1100px;
+    overflow: hidden;
 }
 
 .item {
-    width: 100%;
     display: flex;
     justify-content: center;
 }
 
 .image_area {
-    width: 100%;
+    height: 800px;
     display: flex;
     padding: 0 40px;
-    justify-content: space-between;
-    overflow: hidden;
+    justify-content: center;
+    align-items: center;
 }
 
 .character_image {
     cursor: pointer;
     position: relative;
-    object-fit: contain;
+    object-fit: cover;
     top: 0;
     left: 0;
-    height: calc(100vh - 300px);
+    height: 700px;
     width: 350px;
+    transform: scale(0.9);
+}
+
+#image_middle {
+    height: 800px;
+    width: 400px;
+    transform: scale(1);
+    transition: width 0.5s;
 }
 
 .title {
@@ -59,13 +71,23 @@
     }
 }
 
+.image_big {
+    transform: scale(1.15) !important;
+    transition: 0.5s !important;
+}
+
+.image_small {
+    transform: scale(0.8) !important;
+    transition: 0.5s !important;
+}
+
 /*토스트 메시지*/
 #toast_message {
     opacity: 0;
     position: fixed;
     bottom: 100px;
     left: 50%;
-    transform: translate(-50%,0);
+    transform: translate(-50%, 0);
     padding: 10px 50px;
     background: rgba(176, 58, 46, 0.70);
     border-radius: 100px;
@@ -73,6 +95,7 @@
     box-shadow: 3px 4px 11px 0px #00000040;
     transition: all 0.5s;
 }
+
 /*토스트 메시지 활성화 되었을 때*/
 #toast_message.active {
     opacity: 100%;

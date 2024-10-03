@@ -16,8 +16,8 @@
     <title>8World</title>
 </head>
 <body>
+
 <script type="module">
-    // todo : 이미지 이동 animation 추가
     // todo : 상세 페이지 이동 시 데이터 전달 기능 구현
     // todo : 현재 페이지 js 파일 분리 작업
     // todo : 변수명 함수명 재정리
@@ -47,7 +47,12 @@
 
     let userArray = []; // Firebase에서 받아온 데이터 Array로 저장
     let arrayCount = 0; // 현재 위치한 row 확인을 위한 변수
-    const imageArray = []; // image data
+    let imageArray = []; // image data
+
+    const leftArrow = document.getElementById('left_arrow');
+    const rightArrow = document.getElementById('right_arrow');
+    const characterImageId = document.getElementById('character_image');
+    const imageMiddle = document.getElementById('image_middle');
 
     data.forEach((doc) => {
         // db에 존재하는 데이터 Array로 저장
@@ -57,24 +62,26 @@
     });
 
     // 없는 사용자일 경우 발생할 사용자 에러 메시지
-    const toastOn=()=>{
+    const toastOn = () => {
         toastMessage.classList.add('active');
-        setTimeout(function(){
+        setTimeout(function () {
             toastMessage.classList.remove('active');
-        },1000);
+        }, 1000);
     }
 
+    // 이미지 클릭 시 이벤트
     const imageClickEvent = (arrayNum) => {
-        if(imageArray[arrayNum] === "assets/images/pngwing.com.png") {
+        if (imageArray[arrayNum] === "assets/images/pngwing.com.png") {
             toastOn();
-        }
-        else {
-            location.href='detailPage.html';
+        } else {
+            location.href = 'detailPage.html';
         }
     };
 
     // image tag html에 전달 하는 함수
     const imageArea = () => {
+        imageArray = [];
+
         if (userArray.length) {
             if (userArray.length < 3) {
                 for (let i = 0; i < 3; i++) {
@@ -96,24 +103,27 @@
         }
 
         const leftImageNum = arrayCount - 1 < 0 ? imageArray.length - 1 : arrayCount - 1;
-        const rightImageNum = arrayCount > imageArray.length - 1 ? 0 : arrayCount + 1;
+        const rightImageNum = arrayCount + 1 >= imageArray.length ? 0 : arrayCount + 1;
 
         // 이미지 노출 html
-        document.getElementById("character_image").innerHTML = `
-                <div class="image_area ">
-                    <div calss="content">
-                        <img src="${imageArray[leftImageNum]}"
-                            class="character_image toast_btn" id="image_left"/>
-                    </div>
-
-                    <div calss="content">
-                        <img src="${imageArray[arrayCount]}" class="character_image" id="image_middle"/>
-                    </div>
-
-                    <div calss="content">
-                        <img src="${imageArray[rightImageNum]}" class="character_image" id="image_rigth"/>
-                    </div>
+        characterImageId.innerHTML = `
+            <div class="image_area" id="image_area">
+                <div calss="content">
+                    <img src="${imageArray[leftImageNum - 1 < 0 ? imageArray.length - 1 : leftImageNum - 1]}" class="character_image"/>
                 </div>
+                <div calss="content">
+                    <img src="${imageArray[leftImageNum]}" class="character_image image_left"/>
+                </div>
+                <div calss="content">
+                    <img src="${imageArray[arrayCount]}" class="character_image image_middle" id="image_middle"/>
+                </div>
+                <div calss="content">
+                    <img src="${imageArray[rightImageNum]}" class="character_image image_right"/>
+                </div>
+                <div calss="content">
+                    <img src="${imageArray[rightImageNum + 1 >= imageArray.length ? 0 : rightImageNum + 1]}" class="character_image"/>
+                </div>
+            </div>
         `;
 
         // image click event
@@ -128,13 +138,9 @@
         });
     }
 
-    //html DOM 생성 완료 후 바로 이미지 노출 되기 위한 코드
-    $(document).ready(() => {
-        imageArea();
-    })
-
     // 이미지 전환 시 현재 있는 이미지 개수를 넘지 않도록 조정하는 함수
     const changeImage = (moveCount) => {
+
         if (imageArray.length <= (arrayCount + moveCount)) {
             arrayCount = 0;
         } else if (0 > (arrayCount + moveCount)) {
@@ -143,26 +149,53 @@
             arrayCount += moveCount;
         }
 
-        imageArea();
+        setTimeout(() => {
+            imageArea();
+        }, 500);
+    }
+
+    // 이미지 이동 애니메이션
+    const imageMoveAnimation = (direction) => {
+        characterImageId.animate(
+            [
+                {transform: `translate(0, 0)`},
+                {transform: `translate(` + direction + `350px, 0)`},
+            ],
+            {
+                duration: 500,
+            }
+        );
+        document.querySelector('.image_middle').classList.add('image_small');
     }
 
     // 이미지 이동 버튼 클릭 이벤트
-    $('#left_arrow').on('click', () => {
+    leftArrow.addEventListener('click', () => {
         changeImage(1);
+        imageMoveAnimation('-');
+        document.querySelector('.image_right').classList.add('image_big');
     });
 
-    $('#right_arrow').on('click', () => {
+    rightArrow.addEventListener('click', () => {
         changeImage(-1);
+        imageMoveAnimation('+');
+        document.querySelector('.image_left').classList.add('image_big');
     });
+
+    //html DOM 생성 완료 후 바로 이미지 노출 되기 위한 코드
+    $(document).ready(() => {
+        imageArea();
+    })
 </script>
 
 <div class="main">
     <div class="title">8 World</div>
     <div class="description">8조 8은 안으로 굽조 입니다!</div>
     <div class="slider">
-        <button class="c_button c_button_m" id="left_arrow"><</button>
-        <span class="item" id="character_image"></span>
-        <button class="c_button_m c_button" id="right_arrow">></button>
+        <button class="c_button c_button_m left_button" id="left_arrow"><</button>
+        <div class="item_area">
+            <span class="item" id="character_image"></span>
+        </div>
+        <button class="c_button_m c_button right_button" id="right_arrow">></button>
     </div>
     <button class="c_button c_button_m" onclick="location.href='addPage.html'">팀원 추가</button>
     <div id="toast_message">없는 사용자 입니다.</div>
