@@ -11,6 +11,8 @@ class 명에 추가해서 사용해 주세요!*/
 
 
 body {
+    background-image: url('../img/backgroundGif.gif');
+    background-size: cover;
     padding: 3rem 5rem;
     font-family: "GmarketSansMedium";
 }
