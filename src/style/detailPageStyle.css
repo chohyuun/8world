@@ -8,7 +8,7 @@
     align-items: center;
     background-image: url(/Users/t2024-m0173/dev/8world/src/img/background1.jpeg);
     background-size: contain;
-    
+
 }
 
 .slider {
@@ -94,4 +94,18 @@
 
 #modalContainer.hidden {
     display: none;
+}
+
+.mainFooter {
+    background-color: blue;
+    text-align: center;
+    width: 600px;
+}
+
+.link-sns {
+    list-style: none;
+}
+
+.btn {
+    text-align: center;
 }
