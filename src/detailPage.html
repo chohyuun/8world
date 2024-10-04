@@ -13,7 +13,7 @@
 
     <!--common style, js 파일 import-->
     <link href="style/commonStyle.css" rel="stylesheet" />
-    <link href="/Users/t2024-m0173/dev/8world/src/style/detailPageStyle.css" rel="stylesheet" />
+    <link href="style/detailPageStyle.css" rel="stylesheet" />
     <title>8Woårld-상세</title>
 
     <style>
@@ -45,9 +45,9 @@
 
 
 
-            <a href="..."><img class="img-github" src="/Users/t2024-m0173/dev/8world/src/img/icon-github.png"
+            <a href="..."><img class="img-github" src="img/icon-github.png"
                     alt="깃허브 주소" /></a>
-            <a href="...."><img class="img-velog" src="/Users/t2024-m0173/dev/8world/src/img/icon-velog.png"
+            <a href="...."><img class="img-velog" src="img/icon-velog.png"
                     alt="블로그 주소" /></a>
         </div>
 
@@ -140,6 +140,10 @@
 
     console.log(nname);
 
+    document.getElementById('q1').innerHTML = `
+        <img src="${oneData.character_image}"/>
+    `
+
 
 
 
@@ -178,7 +182,7 @@
 
     //버튼 관련 이벤트
     $('#mainBtn').on('click', () => {
-        window.location.href = "/Users/t2024-m0173/dev/8world/src/mainPage.html";
+        window.location.href = "mainPage.html";
     });
 
     $('#admendBtn').on('click', () => {
