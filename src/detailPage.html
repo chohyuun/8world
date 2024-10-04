@@ -17,19 +17,10 @@
     <title>8Woårld-상세</title>
 
     <style>
-        .mainFooter {
-            background-color: blue;
-            text-align: center;
-            width: 600px;
-        }
+      
 
-        .link-sns {
-            list-style: none;
-        }
+      
 
-        .btn {
-            text-align: center;
-        }
     </style>
 
 </head>
@@ -37,8 +28,9 @@
 <body>
 
     <div class="main">
-        <div class="title"> 팀원 이름 나오게 </div>
-        <div class="topp"> 일단 크기는 맟줘 </div>
+        <div class="title"> 팀원 이름 </div>
+        <div class="topp" id="q1"> 팀원 정보 나오게</div>
+
         <div class="slider">
             <div class="slides">
                 <span class="item" id="character_image">
@@ -80,8 +72,10 @@
     // Firebase SDK 라이브러리 가져오기
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
     import { getFirestore } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
-    import { collection, addDoc } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
-    import { getDocs } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+    import { collection, addDoc, query, where } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+    import { getDocs, doc, getDoc } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+    import {  deleteDoc } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+
 
 
     // Firebase 구성 정보 설정
@@ -101,7 +95,7 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
-
+    //Modal 관련
     const deleteBtn = document.getElementById('deleteBtn');
     const modalCloseBtn = document.getElementById('modalCloseBtn');
     const modal = document.getElementById('modalContainer');
@@ -120,25 +114,30 @@
     docs.forEach((doc) => {
         let row = doc.data();
         console.log(row);
+
+        let blog_url = row['blog_url'];
+        let character_image = row['character'];
+        let comment = row['comment'];
+        let github_url = row['github_url'];
+        let mbti = row['mbti'];
+        let name = row['name'];
+        let ç = row['image'];
     });
 
-    function memberInfo() {
-        let blog_url = $('blog_url').val();
-        let character_image = $('character_image').val();
-        let comment = $('comment').val();
-        let github_url = $('github_url').val();
-        let mbti = $('mbti').val();
-        let name = $('name').val();
-        let image = $('image').val();
-    }
+    const dataDoc = await getDoc(doc(db, 'user', 'JjHh0BSTx22k8XLqweVS'));
+    const rrow = dataDoc.data();
 
-    let Data = memberInfo;
-
-    console.log(Data);
-
-    
+    let blog_url = rrow['blog_url'];
+    let character_image = rrow['character'];
+    let comment = rrow['comment'];
+    let github_url = rrow['github_url'];
+    let mbti = rrow['mbti'];
+    let name = rrow['name'];
+    let image = rrow['image'];
 
 
+    let temp = `<p> ${name} 는 ${blog_url}  </p>`
+    $('#q1').append(temp);
 
 
 
@@ -151,9 +150,10 @@
 
     $('#admendBtn').on('click', () => {
 
-    }); 
-    
+    });
+
     $('#deleteBtn').on('click', () => {
+        // const deleteData = await deleteDoc(doc(db, "cities", "DC"));
 
     });
 </script>

@@ -50,7 +50,6 @@
     const leftArrow = document.getElementById('left_arrow');
     const rightArrow = document.getElementById('right_arrow');
     const characterImageId = document.getElementById('character_image');
-    const imageMiddle = document.getElementById('image_middle');
 
     data.forEach((doc) => {
         // db에 존재하는 데이터 Array로 저장
@@ -69,7 +68,7 @@
 
     // 이미지 클릭 시 이벤트
     const imageClickEvent = (arrayNum) => {
-        if (imageArray[arrayNum] === "assets/images/pngwing.com.png") {
+        if (imageArray[arrayNum] === "img/raccoon.png") {
             toastOn();
         } else {
             characterImageId.addEventListener('click', (e) => {
@@ -97,7 +96,7 @@
                     if (i < userArray.length) {
                         imageArray.push(userArray[i].character_image);
                     } else {
-                        imageArray.push("assets/images/pngwing.com.png");
+                        imageArray.push("img/raccoon.png");
                     }
                 }
             } else {
@@ -107,7 +106,7 @@
             }
         } else {
             for (let i = 0; i < 3; i++) {
-                imageArray.push("assets/images/pngwing.com.png");
+                imageArray.push("img/raccoon.png");
             }
         }
 
@@ -118,19 +117,29 @@
         characterImageId.innerHTML = `
             <div class="image_area" id="image_area">
                 <div calss="content">
-                    <img src="${imageArray[leftImageNum - 1 < 0 ? imageArray.length - 1 : leftImageNum - 1]}" class="character_image"/>
+                    <div class="image_card">
+                        <img src="${imageArray[leftImageNum - 1 < 0 ? imageArray.length - 1 : leftImageNum - 1]}"  class="image_card_body"></img>
+                    </div>
                 </div>
                 <div calss="content">
-                    <img src="${imageArray[leftImageNum]}" class="character_image image_left"/>
+                    <div class="image_card image_left">
+                        <img src="${imageArray[leftImageNum]}" class="image_card_body"></img>
+                    </div>
                 </div>
                 <div calss="content">
-                    <img src="${imageArray[arrayCount]}" class="character_image image_middle" id="image_middle"/>
+                    <div class="image_card image_middle">
+                        <img src="${imageArray[arrayCount]}" class="image_card_body"></img>
+                    </div>
                 </div>
                 <div calss="content">
-                    <img src="${imageArray[rightImageNum]}" class="character_image image_right"/>
+                    <div class="image_card image_right">
+                        <img src="${imageArray[rightImageNum]}" class="image_card_body"></img>
+                    </div>
                 </div>
                 <div calss="content">
-                    <img src="${imageArray[rightImageNum + 1 >= imageArray.length ? 0 : rightImageNum + 1]}" class="character_image"/>
+                    <div class="image_card">
+                        <img src="${imageArray[rightImageNum + 1 >= imageArray.length ? 0 : rightImageNum + 1]}"  class="image_card_body"></img>
+                    </div>
                 </div>
             </div>
         `;
@@ -198,13 +207,13 @@
 
 <div class="main">
     <div class="title">8 World</div>
-    <div class="description">8조 8은 안으로 굽조 입니다!</div>
+    <div class="description">8조라니 러키비키쟈나~</div>
     <div class="slider">
-        <button class="c_button c_button_m left_button" id="left_arrow"><</button>
+        <img src="img/caret-left-solid.svg" class="button_image left_button" id="left_arrow"/>
         <div class="item_area">
             <span class="item" id="character_image"></span>
         </div>
-        <button class="c_button_m c_button right_button" id="right_arrow">></button>
+        <img src="img/caret-right-solid.svg" class="button_image right_button" id="right_arrow"/>
     </div>
     <button class="c_button c_button_m" onclick="location.href='addPage.html'">팀원 추가</button>
     <div id="toast_message">없는 사용자 입니다.</div>
