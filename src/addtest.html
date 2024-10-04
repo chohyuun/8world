@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link href="style/commonStyle.css" rel="stylesheet" />
+    <title>8World-추가</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    <style>
+        .imgsize {
+            width: 250px;
+            height: 250px;
+        }
+        #chImage {
+            width: 400px;
+            height: 700px;
+            background-image: url('https://firebasestorage.googleapis.com/v0/b/world-6960c.appspot.com/o/character_image%2Fpngwing.com.png?alt=media&token=ebf9ec46-f63d-4420-8a94-2a664c9f0f1f');
+            border-radius: 20px 20px / 20px 20px;
+            overflow: hidden;
+            margin: 0px 10px 10px 0px;
+        }
+    </style>
+
+    <script type="module">
+        // firebase setting
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
+        import { getFirestore } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+        import { collection, addDoc } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+        import { getDocs } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+        import { getStorage, ref, uploadBytes, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-storage.js";
+
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyDBzg-CgJ_rurOKVL3QsX14yfRyat4fy6c",
+            authDomain: "world-6960c.firebaseapp.com",
+            projectId: "world-6960c",
+            storageBucket: "world-6960c.appspot.com",
+            messagingSenderId: "892743835529",
+            appId: "1:892743835529:web:b4eef016af8ecfb8884b58"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const storage = getStorage(app);
+
+
+        $("#btn").click(async function () {
+            let image = $('#image').val();
+            let title = $('#title').val();
+            let content = $('#content').val();
+            let date = $('#date').val();
+
+            let doc = {
+                'image': image,
+                'title': title,
+                'content': content,
+                'date': date
+            };
+            
+            await addDoc(collection(db, "user"), doc);
+            alert('저장 완료!');
+            window.location.reload();
+        })
+
+        let docs = await getDocs(collection(db, "user"));
+        docs.forEach((doc) => {
+            let row = doc.data();
+
+            let name = row['name'];
+            let mbti = row['mbti'];
+            let github_url = row['github_url'];
+            let blog_url = row['blog_url'];
+            let comment = row['comment'];
+            let character_image = row['character_image'];
+            let image = row['image'];
+
+            let temp_html = `
+            <div class="col">
+                <p class="card-text">이름: "${name}"</p>
+                <p class="card-text">MBTI: "${mbti}"</p>
+                <p class="card-text">github 링크: "${github_url}"</p>
+                <p class="card-text">블로그 링크: "${blog_url}"</p>
+                <p class="card-text">한마디: "${comment}"</p>
+                <img src="${character_image}" class="imgsize" alt="...">
+                <img src="${image}" class="imgsize" alt="...">
+            </div>`;
+
+            $('#list').append(temp_html);
+        });
+
+        $("#addUserBtn").click(async function () {
+            let name = $('#name').val();
+            let mbti = $('#mbti').val();
+            let github_url = $('#github_url').val();
+            let blog_url = $('#blog_url').val();
+            let comment = $('#comment').val();
+            let character_image = uploadImage(document.getElementById('character_image').files[0]);
+            console.log(character_image);
+            // 지금 uploadImage 함수에서 리턴받기 전에 함수가 작동해버린다. 이를 해결해야 한다.
+            // 비동기처리 해결하기. 콜백함수란 무엇인가? 
+            return ;
+            URL.revokeObjectURL(objectUrl)
+            let doc = {
+                'name': name,
+                'mbti': mbti,
+                'github_url': github_url,
+                'blog_url': blog_url,
+                'comment': comment,
+                'character_image': character_image
+            };
+            
+            await addDoc(collection(db, "user"), doc);
+            alert('등록 완료!');
+            window.location.reload();
+        })
+
+        function uploadImage(file) {
+            let imageRef = ref(storage, 'character_image/' + file.name);
+            const uploadTask = uploadBytesResumable(imageRef, file);
+
+            uploadTask.on('state_changed',
+                (snapshot) => {
+                    
+                }, 
+                (error) => {
+                    alert('error !');
+                }, 
+                () => {
+
+                    getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+                        console.log(downloadURL);
+                        return downloadURL;
+                    });
+                }
+            );
+        }
+    </script>
+</head>
+<body>
+
+    <h1>This is addtest !</h1>
+
+    <div class="addUser">
+        <input type="file" id="character_image" class="chUpload" accept="image/*" required style="display: none;">
+        <div id="chImage"></div>
+        <input type="text" class="form-control" id="name"  placeholder="이름">
+        <input type="text" class="form-control" id="mbti"  placeholder="MBTI">
+        <input type="text" class="form-control" id="github_url"  placeholder="github 주소">
+        <input type="text" class="form-control" id="blog_url"  placeholder="블로그 주소">
+        <input type="text" class="form-control" id="comment"  placeholder="한마디">
+        <button id="addUserBtn" class="c_button">등록하기</button>
+    </div>
+    
+
+    <div id="urltest"></div>
+
+
+    <div id="list">
+    </div>
+    <script>
+        function getImageFiles(event) {
+            const file = event.currentTarget.files[0];
+            console.log($('#character_image').val());
+            console.log(event);
+            console.log(file);
+
+            if (!file.type.match("image/.*")) {
+                alert('이미지 파일만 업로드가 가능합니다.');
+                $('#character_image').val("");
+                return
+            }
+
+            let chImage = document.createElement("img"); //새 이미지 추가
+
+            //이미지 source 가져오기
+            chImage.src = URL.createObjectURL(file);
+            chImage.id = "chimg_id"
+            chImage.style.width = "100%";
+            chImage.style.height = "100%";
+            chImage.style.objectFit = "cover";
+
+            //이미지를 div에 추가
+            let container = document.getElementById('chImage');
+            container.appendChild(chImage);
+        }
+        const chUpload = document.querySelector('.chUpload');
+        const chImage = document.querySelector('#chImage');
+    
+        chImage.addEventListener('click', () => chUpload.click());
+        chUpload.addEventListener('change', getImageFiles);
+
+        //이미지 변경 시, revokeObjectURL 를 통해 기존의 src 를 없애주기.
+    </script>
+</body>
+</html>
