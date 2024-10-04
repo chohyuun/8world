@@ -17,7 +17,7 @@
 </head>
 <body>
 
-<script type="module">
+<script defer type="module">
     // firebase 호출부
     import {initializeApp} from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
     import {getFirestore} from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
@@ -71,17 +71,17 @@
             toastOn();
         } else {
             characterImageId.addEventListener('click', (e) => {
-                const target = e.target;
-
-                // json 형식으로 클릭한 이미지 데이터 전송
-                for(let i = 0; i < userArray.length; i++){
-                    if (userArray[i]['character_image'] === target.currentSrc) {
-                        localStorage.setItem('characterImage', JSON.stringify(userArray[i]));
-                    }
+                let target = e.target.currentSrc;
+                if(target !== undefined) {
+                    console.log(target.currentSrc)
+                    userArray.forEach((e) => {
+                        if (e.image === target) {
+                            // Url path 로 사용자 정보 전송
+                            location.href = `detailPage.html?${e.character_image}`
+                        }
+                    })
                 }
             })
-
-            location.href = 'detailPage.html';
         }
     };
 
@@ -230,7 +230,7 @@
         <img src="img/caret-right-solid.svg" class="button_image right_button" id="right_arrow"/>
     </div>
     <button class="c_button c_button_m" onclick="location.href='addPage.html'">팀원 추가</button>
-    <div class="game_page_button"  onclick="location.href='gameSearchPage.html'">
+    <div class="game_page_button" onclick="location.href='gameSearchPage.html'">
         <img src="img/logo.svg"/>
         <span>게임검색</span>
     </div>
