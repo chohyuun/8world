@@ -99,12 +99,10 @@
             let github_url = $('#github_url').val();
             let blog_url = $('#blog_url').val();
             let comment = $('#comment').val();
-            let character_image = uploadImage(document.getElementById('character_image').files[0]);
+            let character_image = await uploadImage(document.getElementById('character_image').files[0]);
             console.log(character_image);
-            // 지금 uploadImage 함수에서 리턴받기 전에 함수가 작동해버린다. 이를 해결해야 한다.
-            // 비동기처리 해결하기. 콜백함수란 무엇인가? 
-            return ;
-            URL.revokeObjectURL(objectUrl)
+
+            // URL.revokeObjectURL(objectUrl)
             let doc = {
                 'name': name,
                 'mbti': mbti,
@@ -120,24 +118,28 @@
         })
 
         function uploadImage(file) {
-            let imageRef = ref(storage, 'character_image/' + file.name);
-            const uploadTask = uploadBytesResumable(imageRef, file);
+            return new Promise((resolve, reject) => { 
+                let imageRef = ref(storage, 'character_image/' + file.name);
+                const uploadTask = uploadBytesResumable(imageRef, file);
+                console.log('check');
 
-            uploadTask.on('state_changed',
-                (snapshot) => {
-                    
-                }, 
-                (error) => {
-                    alert('error !');
-                }, 
-                () => {
+                uploadTask.on('state_changed',
+                    (snapshot) => {
+                        
+                    }, 
+                    (error) => {
+                        alert('error !');
+                        reject("실패");
+                    }, 
+                    () => {
 
-                    getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-                        console.log(downloadURL);
-                        return downloadURL;
-                    });
-                }
-            );
+                        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+                            console.log(downloadURL);
+                            resolve(downloadURL);
+                        });
+                    }
+                );
+            })
         }
     </script>
 </head>
