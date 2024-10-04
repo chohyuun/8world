@@ -18,8 +18,6 @@
 <body>
 
 <script type="module">
-    // todo : 현재 페이지 js 파일 분리 작업
-
     // firebase 호출부
     import {initializeApp} from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
     import {getFirestore} from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
@@ -45,6 +43,7 @@
 
     let userArray = []; // Firebase에서 받아온 데이터 Array로 저장
     let arrayCount = 0; // 현재 위치한 row 확인을 위한 변수
+    let characterImageArray = []; // character image data
     let imageArray = []; // image data
 
     const leftArrow = document.getElementById('left_arrow');
@@ -68,7 +67,7 @@
 
     // 이미지 클릭 시 이벤트
     const imageClickEvent = (arrayNum) => {
-        if (imageArray[arrayNum] === "img/raccoon.png") {
+        if (characterImageArray[arrayNum] === "img/raccoon.png") {
             toastOn();
         } else {
             characterImageId.addEventListener('click', (e) => {
@@ -88,57 +87,72 @@
 
     // image tag html에 전달 하는 함수
     const imageArea = () => {
+        characterImageArray = [];
         imageArray = [];
 
         if (userArray.length) {
             if (userArray.length < 3) {
                 for (let i = 0; i < 3; i++) {
                     if (i < userArray.length) {
-                        imageArray.push(userArray[i].character_image);
+                        characterImageArray.push(userArray[i].character_image);
+                        imageArray.push(userArray[i]['image']);
                     } else {
+                        characterImageArray.push("img/raccoon.png");
                         imageArray.push("img/raccoon.png");
                     }
                 }
             } else {
                 for (let i = 0; i < userArray.length; i++) {
-                    imageArray.push(userArray[i]['character_image']);
+                    characterImageArray.push(userArray[i]['character_image']);
+                    imageArray.push(userArray[i]['image']);
                 }
             }
         } else {
             for (let i = 0; i < 3; i++) {
+                characterImageArray.push("img/raccoon.png");
                 imageArray.push("img/raccoon.png");
             }
         }
 
-        const leftImageNum = arrayCount - 1 < 0 ? imageArray.length - 1 : arrayCount - 1;
-        const rightImageNum = arrayCount + 1 >= imageArray.length ? 0 : arrayCount + 1;
+        const leftImageNum = arrayCount - 1 < 0 ? characterImageArray.length - 1 : arrayCount - 1;
+        const rightImageNum = arrayCount + 1 >= characterImageArray.length ? 0 : arrayCount + 1;
 
         // 이미지 노출 html
         characterImageId.innerHTML = `
             <div class="image_area" id="image_area">
                 <div calss="content">
                     <div class="image_card">
-                        <img src="${imageArray[leftImageNum - 1 < 0 ? imageArray.length - 1 : leftImageNum - 1]}"  class="image_card_body"></img>
+                        <img src="${characterImageArray[leftImageNum - 1 < 0 ? characterImageArray.length - 1 : leftImageNum - 1]}" class="image_card_body"/>
+                        <img src="${imageArray[leftImageNum - 1 < 0 ? characterImageArray.length - 1 : leftImageNum - 1]}" class="image_card_back"/>
+                        <div class="user_name">${userArray[leftImageNum - 1 < 0 ? characterImageArray.length - 1 : leftImageNum - 1]['name']}</div>
                     </div>
                 </div>
                 <div calss="content">
                     <div class="image_card image_left">
-                        <img src="${imageArray[leftImageNum]}" class="image_card_body"></img>
+                        <img src="${characterImageArray[leftImageNum]}" class="image_card_body"/>
+                        <img src="${imageArray[leftImageNum]}" class="image_card_back"/>
+                        <div class="user_name">${userArray[leftImageNum]['name']}</div>
                     </div>
                 </div>
                 <div calss="content">
                     <div class="image_card image_middle">
-                        <img src="${imageArray[arrayCount]}" class="image_card_body"></img>
+                        <img src="${characterImageArray[arrayCount]}" class="image_card_body"/>
+                        <img src="${imageArray[arrayCount]}" class="image_card_back"/>
+                        <div class="user_name">${userArray[arrayCount]['name']}</div>
                     </div>
                 </div>
                 <div calss="content">
                     <div class="image_card image_right">
-                        <img src="${imageArray[rightImageNum]}" class="image_card_body"></img>
+                        <img src="${characterImageArray[rightImageNum]}" class="image_card_body"/>
+                        <img src="${imageArray[rightImageNum]}" class="image_card_back"/>
+                        <div class="user_name">${userArray[rightImageNum]['name']}</div>
                     </div>
                 </div>
                 <div calss="content">
                     <div class="image_card">
-                        <img src="${imageArray[rightImageNum + 1 >= imageArray.length ? 0 : rightImageNum + 1]}"  class="image_card_body"></img>
+                        <img src="${characterImageArray[rightImageNum + 1 >= characterImageArray.length ? 0 : rightImageNum + 1]}"  class="image_card_body"/>
+                        <img src="${imageArray[rightImageNum + 1 >= characterImageArray.length ? 0 : rightImageNum + 1]}"  class="image_card_back"/>
+                        <div class="user_name">${userArray[rightImageNum + 1 >= characterImageArray.length ? 0 : rightImageNum + 1]['name']}</div>
                     </div>
                 </div>
             </div>
@@ -159,10 +173,10 @@
     // 이미지 전환 시 현재 있는 이미지 개수를 넘지 않도록 조정하는 함수
     const changeImage = (moveCount) => {
 
-        if (imageArray.length <= (arrayCount + moveCount)) {
+        if (characterImageArray.length <= (arrayCount + moveCount)) {
             arrayCount = 0;
         } else if (0 > (arrayCount + moveCount)) {
-            arrayCount = imageArray.length - 1;
+            arrayCount = characterImageArray.length - 1;
         } else {
             arrayCount += moveCount;
         }
@@ -215,7 +229,7 @@
         </div>
         <img src="img/caret-right-solid.svg" class="button_image right_button" id="right_arrow"/>
     </div>
-    <button class="c_button c_button_m" onclick="location.href='addPage.html'">팀원 추가</button>
+    <button class="c_button c_button_m" onclick="location.href='addtest.html'">팀원 추가</button>
     <div id="toast_message">없는 사용자 입니다.</div>
 </div>
 

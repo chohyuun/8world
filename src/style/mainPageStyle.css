@@ -59,18 +59,54 @@ body{
     position: relative;
     object-fit: contain;
     margin: 10px;
-    background: #ffffff;
     box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.3);
     width: 350px;
     height: 500px;
     border-radius: 30px;
     padding: 30px;
     transform: scale(0.9);
+    background: #ffffff;
+    text-align: center;
+    transform-style: preserve-3d;
+    
+    &:hover {
+        transition: 0.5s;
+        transform: scale(0.95);
+        background-color: rgb(208, 211, 212);
+        .user_name {
+            transform: rotateY(180deg);
+        }
+    }
 }
 
 .image_card_body {
+    width: 290px;
+    height: 390px;
+    border-radius: 15px;
+    backface-visibility: hidden;
+    position: absolute;
+    z-index: 1;
+}
+
+.image_card_back {
+    width: 290px;
+    height: 390px;
+    border-radius: 15px;
+    z-index: 2;
+    transform: rotateY(180deg);
+    backface-visibility: hidden;
+}
+
+.user_name {
     width: 100%;
-    height: 100%;
+    margin-top: 10px;
+    border-radius: 15px;
+    font-size: 25px;
+
+}
+
+.image_card:hover {
+    transform: rotateY(180deg);
 }
 
 .button_image {
@@ -88,6 +124,11 @@ body{
 
 .image_middle {
     transform: scale(1);
+
+    &:hover {
+        transform: scale(1.05);
+        transform: rotateY(180deg);
+    }
 }
 
 .image_big {
