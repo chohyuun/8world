@@ -109,12 +109,11 @@
     });
 
 
-
+//전체 데이터 가져오기  나중에 삭제
     let docs = await getDocs(collection(db, "user"));
     docs.forEach((doc) => {
         let row = doc.data();
-        //console.log(row);
-
+       
         let blog_url = row['blog_url'];
         let character_image = row['character'];
         let comment = row['comment'];
@@ -122,19 +121,27 @@
         let mbti = row['mbti'];
         let name = row['name'];
         let image = row['image'];
+       
     });
+
 
     //메인 페이지에서 데이터 받아오기
     let lastData
     if (localStorage.getItem('characterImage')) {
-        lastData = localStorage.getItem('characterImage')
+        lastData = localStorage.getItem('characterImage');
+        console.log(lastData);
     }
-
+    
     // console.log('lastData', JSON.parse(lastData));
     // console.log(JSON.parse(lastData).mbti);
+
     let oneData = JSON.parse(lastData);
     let nname = oneData['name'];
+
     console.log(nname);
+
+
+
 
 
     const ref = collection(db, "user");
@@ -145,7 +152,7 @@
     querySnapshot.forEach((doc) => {
 
         const rrow = doc.data();
-        console.log(rrow);
+
         const character_image = rrow['character'];
         const comment = rrow['comment'];
         const github_url = rrow['github_url'];
@@ -153,7 +160,7 @@
         const name = rrow['name'];
         const image = rrow['image'];
         const blog_url = rrow['blog_url'];
-       
+
         const temp = `<p>       
                             <br>  이름 = ${name}
                             <br>  이미지 = ${image}
@@ -164,22 +171,10 @@
                             <br>  SNS = ${github_url}
               
                     </p>`
+
         $('#q1').append(temp);
 
     })
-
-
-
-
-    // const dataDoc = await getDoc(doc(db, 'user', "A0hyhIQz0JZsDRGm1tSk"));
-    // const rrow = dataDoc.data();
-    // console.log(rrow);
-
-
-
-
-
-
 
     //버튼 관련 이벤트
     $('#mainBtn').on('click', () => {
@@ -190,9 +185,12 @@
 
     });
 
-    $('#deleteBtn').on('click', () => {
-        // const deleteData = await deleteDoc(doc(db, "cities", "DC"));
 
+    $('#deleteBtn').on('click', () => {
+        // function(){
+        //       await deleteData(doc(db, "user",))
+        // }
+       
     });
 </script>
 </body>
