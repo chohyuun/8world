@@ -15,6 +15,31 @@ body {
     font-family: "GmarketSansMedium";
 }
 
+/* input box style */
+.c_input_area {
+    width: 100%;
+    display: flex;
+}
+
+.c_input_title {
+    width: 100%;
+}
+
+/* todo: 나중에 이름 변경하기*/
+.c_input_box_area {
+    display: flex;
+    flex-direction: row;
+}
+
+.c_input_box {
+    height: 35px;
+    width: 300px;
+    margin: 5px 0 0;
+    font-size: 15px;
+    padding: 0 10px;
+    border: 1px solid rgb(123, 123, 123);
+    border-radius: 8px;
+}
 
 /* button style */
 .c_button {
@@ -34,16 +59,19 @@ body {
 
 .c_button_s {
     width: 80px;
+    height: 40px;
     font-size: 15px;
 }
 
 .c_button_m {
     width: 130px;
+    height: 50px;
     font-size: 18px;
 }
 
 .c_button_l {
     width: 180px;
+    height: 60px;
     font-size: 22px;
 }
 
@@ -73,3 +101,4 @@ body {
         cursor: pointer;
     }
 }
+

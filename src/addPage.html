@@ -6,85 +6,9 @@
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link href="style/commonStyle.css" rel="stylesheet" />
+    <link href="style/addPageStyle.css" rel="stylesheet"/>
     <title>8World-추가</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-
-    <style>
-        body{
-            background-image: url('img/backgroundGif.gif');
-            background-size: cover;
-        }
-        .main {
-            height: calc(100vh - 96px);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-        }
-        .title {
-            font-size: 40px;
-            color: #fff;
-        }
-
-        .description {
-            color: #fff;
-            font-size: 25px;
-            padding-bottom: 20px;
-        }
-
-        .addCharacter {
-            min-width: 80%;
-            height: 100vh;
-            position: relative;
-            display: flex;
-            flex-direction: row;
-            margin: auto;
-            align-items: center;
-            overflow: hidden;
-            justify-content: center;
-
-            border: 2px solid white;
-            border-radius: 20px;
-        }
-
-        #character_image_box {
-            width: 400px;
-            max-height: 100vh;
-            border-radius: 20px 20px / 20px 20px;
-            overflow: hidden;
-            margin: 0px 10px 10px 0px;
-        }
-
-        #image_box {
-            width: 400px;
-            max-height: 50vh;
-            border-radius: 20px 20px / 20px 20px;
-            overflow: hidden;
-            margin: 0px 10px 10px 0px;
-        }
-
-        .inputBox {
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            margin: auto;
-            align-items: center;
-            overflow: hidden;
-            justify-content: center;
-        }
-
-        .home_icon {
-            background-color: rgb(255, 255, 255, 80%);
-            color: #000;
-            height: 80px;
-            width: 80px;
-            margin: 20px;
-
-            &:hover {
-                background-color: rgb(208, 211, 212, 80%);
-            }
-        }
-    </style>
 
     <script type="module">
         // firebase setting
@@ -161,28 +85,33 @@
 </head>
 <body>
     <div class="main">
-        <div class="title">팀원 추가</div>
-        <div class="description">8 World에 캐릭터 생성하기</div>
+        <div class="header">
+            <img src="img/home.svg" class="home_icon" onclick="location.href='mainPage.html'"/>
+            <span>
+                <div class="title">팀원 추가</div>
+                <div class="description">8 World에 캐릭터 생성하기</div>
+            </span>
+        </div>
         <div class="addCharacter">
             <input type="file" id="character_image" class="character_image_upload" accept="image/*" required style="display: none;">
-            <div id="character_image_box">
-                <img src="https://firebasestorage.googleapis.com/v0/b/world-6960c.appspot.com/o/character_image%2Fpngwing.com.png?alt=media&token=ebf9ec46-f63d-4420-8a94-2a664c9f0f1f" id="character_image_view" class="default_img" style="width: 100%; height: 100%; object-fit: cover;">
-                <p>캐릭터 사진</p>
+            <div class="character_image_area">
+                <div id="character_image_box">
+                    <img src="https://firebasestorage.googleapis.com/v0/b/world-6960c.appspot.com/o/character_image%2Fpngwing.com.png?alt=media&token=ebf9ec46-f63d-4420-8a94-2a664c9f0f1f" id="character_image_view" class="default_img">
+                </div>
+                <div class="image_tag">캐릭터 사진</div>
             </div>
             <div class="inputBox">
-                <div style="display: flex; justify-content: space-between;">
-                    <img src="img/home.svg" class="home_icon" onclick="location.href='mainPage.html'"/> 
-                </div>
                 <input type="file" id="image" class="image_upload" accept="image/*" required style="display: none;">
                 <div id="image_box">
-                    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAADhCAMAAAAJbSJIAAAAM1BMVEXk5ueutLfn6eqrsbTp6+zg4uOwtrnJzc/j5earsbW0uby4vcDQ09XGyszU19jd3+G/xMamCvwDAAAFLklEQVR4nO2d2bLbIAxAbYE3sDH//7WFbPfexG4MiCAcnWmnrzkjIRaD2jQMwzAMwzAMwzAMwzAMwzAMwzAMwzAMwzAMwzAMw5wQkHJczewxZh2lhNK/CBOQo1n0JIT74/H/qMV0Z7GU3aCcVPuEE1XDCtVLAhgtpme7H0s1N1U7QjO0L8F7llzGeh1hEG/8Lo7TUmmuSrOfns9xnGXpXxsONPpA/B6OqqstjC6Ax/0ujkNdYQQbKNi2k64qiiEZ+ohi35X+2YcZw/WujmslYewiAliVYrxgJYrdwUmwXsU+RdApUi83oNIE27YvrfB/ZPg8+BJETXnqh9CVzBbTQHgojgiCvtqU9thFJg/CKz3VIMKMEkIXxIWqIpIg2SkjYj+xC816mrJae2aiWGykxRNsW0UwiJghJDljYI5CD8GRiCtIsJxizYUPQ2pzItZy5pcisTRdk/a9m4amtNNfBuQkdVhSaYqfpNTSFGfb9GRIakrE2Pm+GFLaCQPqiu0OpWP+HMPQQcgQMiQprWXNmsVwIjQjYi/ZrhAqNTCgr2gu0Jnz85RSSjso0HkMFZ0YZjKkc26a/jlmh9JiDyDxi9oeorTYAzZkwwoMz19pzj9bnH/GP/+qbchjSGflneWYhtTuKdMOmNKZcJ5TjInQKcYXnESd/jQxy0ENpULTNGOGgxpap/oyw9pbUAqhfx2Dbkhovvfgz4iUzoM9+GlK6/Mh4q29hyC1mwro30hpVVLPF9wYQr71RazOeM5/cw81iBRD+A03aM9/C/obbrKjbYSpCmIVG3qT/Q8oeUo3Rz0IL7vI1tEbCB9pSiu8I/aV8x3Kg/BGWrWp4ZVs0nZfmAoEG4h/61yHYIJiFSl6Q0Vk6tTW1N8kYp8hdOkfHYYMXd2Qft+8CYwqYDSKvqIh+MCF8Wgca2u/cwdgeW3TtuVn6+1oBs3yLo5C2JpK6CvQzGpfUkz9UG/87gCsi5o2LIXolxN0FbwAsjOLEr+YJmXn7iR6N0BCt5p5cMxm7eAsfS+/CACQf4CTpKjzgkvr2cVarVTf96372yut7XLJ1sa7lv6VcfgYrWaxqr3Wlo1S6pvStr22sxOtTNPLzdY3nj20bPP+ejFdJYkLsjGLdtPBEbe/mr2bQKiXWJDroA+vtzc0p9aahuwqHMDYrQEXHEw9jwQl3drMpts9JBU1SdktPe5FBRdJQ6bwXBpa57ib2A8kukQDzMjh++Uo7Fo6Wd02Pkf4fknqoo4HtvAIjsqUcjx6DIPgWCaOML9rKI/oqD9/lgNrn+eF+p7j8tnzHBiR7+kdUGw/+V1Kzkc75mMy6U+FMaxjPibiM1U1uGM+puInHpmALZCgP4pt7i840MV8+0R1zPsRB6UTcqpizncYwZ89syDydfyWCwXB1l8/zRNGWbTG/GHKUm9AkxHMc/EGSk3z2+ArEhPEV5TUBLEvUGFcjEUH80J/jveTGOAJEljJbILWGQT3zRYiwuKsUXN1EEJAzBhRJFll7mBUG7KD8EqPkKekBREaL8hMDZLQSG6AQjtHPYmvTQnX0TtpC1SYCe2YdkkyLP3jj5BSbKiuR585eQhTgoje6yIb0Yb0C+mV6EYvebqw5SDy2WmubogZiF2AVxPC2FpDf8H2Q9QWo6IkjUxTWVEI3WY/wrCeSuqJ+eRWzXR/JXwgVjUMozbCOfoEZiSiKVGepqv5CJ8RyR4D7xBeamqa7z3BJ/z17JxuBPdv93d/a2Ki878MMAzDMAzDMAzDMAzDMF/KP09VUmxBAiI3AAAAAElFTkSuQmCC" id="image_view" class="default_img" style="width: 100%; height: 100%; object-fit: cover;">
-                    <p>프로필 사진</p>
+                    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAADhCAMAAAAJbSJIAAAAM1BMVEXk5ueutLfn6eqrsbTp6+zg4uOwtrnJzc/j5earsbW0uby4vcDQ09XGyszU19jd3+G/xMamCvwDAAAFLklEQVR4nO2d2bLbIAxAbYE3sDH//7WFbPfexG4MiCAcnWmnrzkjIRaD2jQMwzAMwzAMwzAMwzAMwzAMwzAMwzAMwzAMwzAMw5wQkHJczewxZh2lhNK/CBOQo1n0JIT74/H/qMV0Z7GU3aCcVPuEE1XDCtVLAhgtpme7H0s1N1U7QjO0L8F7llzGeh1hEG/8Lo7TUmmuSrOfns9xnGXpXxsONPpA/B6OqqstjC6Ax/0ujkNdYQQbKNi2k64qiiEZ+ohi35X+2YcZw/WujmslYewiAliVYrxgJYrdwUmwXsU+RdApUi83oNIE27YvrfB/ZPg8+BJETXnqh9CVzBbTQHgojgiCvtqU9thFJg/CKz3VIMKMEkIXxIWqIpIg2SkjYj+xC816mrJae2aiWGykxRNsW0UwiJghJDljYI5CD8GRiCtIsJxizYUPQ2pzItZy5pcisTRdk/a9m4amtNNfBuQkdVhSaYqfpNTSFGfb9GRIakrE2Pm+GFLaCQPqiu0OpWP+HMPQQcgQMiQprWXNmsVwIjQjYi/ZrhAqNTCgr2gu0Jnz85RSSjso0HkMFZ0YZjKkc26a/jlmh9JiDyDxi9oeorTYAzZkwwoMz19pzj9bnH/GP/+qbchjSGflneWYhtTuKdMOmNKZcJ5TjInQKcYXnESd/jQxy0ENpULTNGOGgxpap/oyw9pbUAqhfx2Dbkhovvfgz4iUzoM9+GlK6/Mh4q29hyC1mwro30hpVVLPF9wYQr71RazOeM5/cw81iBRD+A03aM9/C/obbrKjbYSpCmIVG3qT/Q8oeUo3Rz0IL7vI1tEbCB9pSiu8I/aV8x3Kg/BGWrWp4ZVs0nZfmAoEG4h/61yHYIJiFSl6Q0Vk6tTW1N8kYp8hdOkfHYYMXd2Qft+8CYwqYDSKvqIh+MCF8Wgca2u/cwdgeW3TtuVn6+1oBs3yLo5C2JpK6CvQzGpfUkz9UG/87gCsi5o2LIXolxN0FbwAsjOLEr+YJmXn7iR6N0BCt5p5cMxm7eAsfS+/CACQf4CTpKjzgkvr2cVarVTf96372yut7XLJ1sa7lv6VcfgYrWaxqr3Wlo1S6pvStr22sxOtTNPLzdY3nj20bPP+ejFdJYkLsjGLdtPBEbe/mr2bQKiXWJDroA+vtzc0p9aahuwqHMDYrQEXHEw9jwQl3drMpts9JBU1SdktPe5FBRdJQ6bwXBpa57ib2A8kukQDzMjh++Uo7Fo6Wd02Pkf4fknqoo4HtvAIjsqUcjx6DIPgWCaOML9rKI/oqD9/lgNrn+eF+p7j8tnzHBiR7+kdUGw/+V1Kzkc75mMy6U+FMaxjPibiM1U1uGM+puInHpmALZCgP4pt7i840MV8+0R1zPsRB6UTcqpizncYwZ89syDydfyWCwXB1l8/zRNGWbTG/GHKUm9AkxHMc/EGSk3z2+ArEhPEV5TUBLEvUGFcjEUH80J/jveTGOAJEljJbILWGQT3zRYiwuKsUXN1EEJAzBhRJFll7mBUG7KD8EqPkKekBREaL8hMDZLQSG6AQjtHPYmvTQnX0TtpC1SYCe2YdkkyLP3jj5BSbKiuR585eQhTgoje6yIb0Yb0C+mV6EYvebqw5SDy2WmubogZiF2AVxPC2FpDf8H2Q9QWo6IkjUxTWVEI3WY/wrCeSuqJ+eRWzXR/JXwgVjUMozbCOfoEZiSiKVGepqv5CJ8RyR4D7xBeamqa7z3BJ/z17JxuBPdv93d/a2Ki878MMAzDMAzDMAzDMAzDMF/KP09VUmxBAiI3AAAAAElFTkSuQmCC"
+                         id="image_view" class="default_img">
                 </div>
-                <input type="text" class="input_line" id="name"  placeholder="이름">
-                <input type="text" class="input_line" id="mbti"  placeholder="MBTI">
-                <input type="text" class="input_line" id="github_url"  placeholder="github 주소">
-                <input type="text" class="input_line" id="blog_url"  placeholder="블로그 주소">
-                <input type="text" class="input_line" id="comment"  placeholder="한마디">
+                <div class="image_tag">프로필 사진</div>
+                <input type="text" class="c_input_box input_line" id="name"  placeholder="이름">
+                <input type="text" class="c_input_box input_line" id="mbti"  placeholder="MBTI">
+                <input type="text" class="c_input_box input_line" id="github_url"  placeholder="github 주소">
+                <input type="text" class="c_input_box input_line" id="blog_url"  placeholder="블로그 주소">
+                <input type="text" class="c_input_box input_line" id="comment"  placeholder="한마디">
                 <button id="addUserBtn" class="c_button">등록하기</button>
             </div>
         </div>
@@ -215,8 +144,8 @@
             //이미지 source 가져오기
             character_image_box.src = URL.createObjectURL(file);
             character_image_box.id = "character_image_view"
-            character_image_box.style.width = "100%";
-            character_image_box.style.height = "100%";
+            character_image_box.style.width = "400px";
+            character_image_box.style.height = "600px";
             character_image_box.style.objectFit = "cover";
 
             //이미지를 div에 추가
@@ -249,8 +178,8 @@
             //이미지 source 가져오기
             image_box.src = URL.createObjectURL(file);
             image_box.id = "image_view"
-            image_box.style.width = "100%";
-            image_box.style.height = "100%";
+            image_box.style.width = "280px";
+            image_box.style.height = "280px";
             image_box.style.objectFit = "cover";
 
             //이미지를 div에 추가
