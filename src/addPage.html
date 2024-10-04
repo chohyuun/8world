@@ -35,10 +35,43 @@
 
         $("#addUserBtn").click(async function () {
             let name = $('#name').val();
+            if (name.length == 0) {
+                alert('이름을 입력해주세요.');
+                $('#name').focus();
+                return false;
+            }
             let mbti = $('#mbti').val();
+            if (mbti.length == 0) {
+                alert('MBTI를 입력해주세요.');
+                $('#mbti').focus();
+                return false;
+            }
             let github_url = $('#github_url').val();
+            if (github_url.length == 0) {
+                alert('github 주소를 입력해주세요.');
+                $('#github_url').focus();
+                return false;
+            }
             let blog_url = $('#blog_url').val();
+            if (blog_url.length == 0) {
+                alert('블로그 주소를 입력해주세요.');
+                $('#blog_url').focus();
+                return false;
+            }
             let comment = $('#comment').val();
+            if (comment.length == 0) {
+                alert('한마디를 입력해주세요.');
+                $('#comment').focus();
+                return false;
+            }
+            if ($('#character_image').val() == 0) {
+                alert('캐릭터 사진을 등록해주세요.');
+                return false;
+            }
+            if ($('#image').val() == 0) {
+                alert('프로필 사진을 등록해주세요.');
+                return false;
+            }
             let character_image = await uploadImage(document.getElementById('character_image').files[0], 'character_image/');
             let image = await uploadImage(document.getElementById('image').files[0], 'image/');
 
@@ -107,11 +140,11 @@
                          id="image_view" class="default_img">
                 </div>
                 <div class="image_tag">프로필 사진</div>
-                <input type="text" class="c_input_box input_line" id="name"  placeholder="이름">
-                <input type="text" class="c_input_box input_line" id="mbti"  placeholder="MBTI">
-                <input type="text" class="c_input_box input_line" id="github_url"  placeholder="github 주소">
-                <input type="text" class="c_input_box input_line" id="blog_url"  placeholder="블로그 주소">
-                <input type="text" class="c_input_box input_line" id="comment"  placeholder="한마디">
+                <input type="text" class="c_input_box input_line" id="name"  required placeholder="이름">
+                <input type="text" class="c_input_box input_line" id="mbti"  required placeholder="MBTI">
+                <input type="text" class="c_input_box input_line" id="github_url"  required placeholder="github 주소">
+                <input type="text" class="c_input_box input_line" id="blog_url"  required placeholder="블로그 주소">
+                <input type="text" class="c_input_box input_line" id="comment"  required placeholder="한마디">
                 <button id="addUserBtn" class="c_button">등록하기</button>
             </div>
         </div>
