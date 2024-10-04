@@ -31,7 +31,7 @@
         import { getFirestore } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
         import { collection, addDoc } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
         import { getDocs } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
-        import { getStorage, ref, uploadBytes, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-storage.js";
+        import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-storage.js";
 
         // Your web app's Firebase configuration
         const firebaseConfig = {
@@ -47,25 +47,6 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
         const storage = getStorage(app);
-
-
-        $("#btn").click(async function () {
-            let image = $('#image').val();
-            let title = $('#title').val();
-            let content = $('#content').val();
-            let date = $('#date').val();
-
-            let doc = {
-                'image': image,
-                'title': title,
-                'content': content,
-                'date': date
-            };
-            
-            await addDoc(collection(db, "user"), doc);
-            alert('저장 완료!');
-            window.location.reload();
-        })
 
         let docs = await getDocs(collection(db, "user"));
         docs.forEach((doc) => {
@@ -102,7 +83,6 @@
             let character_image = await uploadImage(document.getElementById('character_image').files[0]);
             console.log(character_image);
 
-            // URL.revokeObjectURL(objectUrl)
             let doc = {
                 'name': name,
                 'mbti': mbti,
@@ -177,6 +157,17 @@
                 return
             }
 
+            let container = document.getElementById('chImage');
+
+            //이미 img 가 있다면, 
+            // URL.revokeObjectURL(objectUrl)
+            // img 삭제하기.
+            const chimg = document.getElementById('chimg_id');
+            if (chimg != null) { 
+                URL.revokeObjectURL(chimg.src);
+                container.removeChild(chimg);
+            }
+
             let chImage = document.createElement("img"); //새 이미지 추가
 
             //이미지 source 가져오기
@@ -187,7 +178,6 @@
             chImage.style.objectFit = "cover";
 
             //이미지를 div에 추가
-            let container = document.getElementById('chImage');
             container.appendChild(chImage);
         }
         const chUpload = document.querySelector('.chUpload');
@@ -195,8 +185,6 @@
     
         chImage.addEventListener('click', () => chUpload.click());
         chUpload.addEventListener('change', getImageFiles);
-
-        //이미지 변경 시, revokeObjectURL 를 통해 기존의 src 를 없애주기.
     </script>
 </body>
 </html>
