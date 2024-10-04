@@ -39,11 +39,33 @@
 }
 
 .image_area {
-    height: 800px;
+    height: calc(100vh - 400px);
     display: flex;
     padding: 0 40px;
     justify-content: center;
     align-items: center;
+}
+
+.game_page_button {
+    width: 150px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    align-self: flex-end;
+    margin-right: 50px;
+    padding: 5px 10px;
+    border-radius: 10px;
+    background-color: rgb(255, 255, 255, 0.8);
+    cursor: pointer;
+
+    img{
+        width: 50px;
+        margin-right: 10px;
+    }
+
+    &:hover {
+        background-color: rgb(182, 182, 182);
+    }
 }
 
 /* card style */
