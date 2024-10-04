@@ -17,9 +17,9 @@
     <title>8Woårld-상세</title>
 
     <style>
-      
 
-      
+
+
 
     </style>
 
@@ -74,7 +74,7 @@
     import { getFirestore } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
     import { collection, addDoc, query, where } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
     import { getDocs, doc, getDoc } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
-    import {  deleteDoc } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+    import { deleteDoc } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
 
 
 
@@ -113,7 +113,7 @@
     let docs = await getDocs(collection(db, "user"));
     docs.forEach((doc) => {
         let row = doc.data();
-        console.log(row);
+        //console.log(row);
 
         let blog_url = row['blog_url'];
         let character_image = row['character'];
@@ -121,23 +121,61 @@
         let github_url = row['github_url'];
         let mbti = row['mbti'];
         let name = row['name'];
-        let ç = row['image'];
+        let image = row['image'];
     });
 
-    const dataDoc = await getDoc(doc(db, 'user', 'JjHh0BSTx22k8XLqweVS'));
-    const rrow = dataDoc.data();
+    //메인 페이지에서 데이터 받아오기
+    let lastData
+    if (localStorage.getItem('characterImage')) {
+        lastData = localStorage.getItem('characterImage')
+    }
 
-    let blog_url = rrow['blog_url'];
-    let character_image = rrow['character'];
-    let comment = rrow['comment'];
-    let github_url = rrow['github_url'];
-    let mbti = rrow['mbti'];
-    let name = rrow['name'];
-    let image = rrow['image'];
+    // console.log('lastData', JSON.parse(lastData));
+    // console.log(JSON.parse(lastData).mbti);
+    let oneData = JSON.parse(lastData);
+    let nname = oneData['name'];
+    console.log(nname);
 
 
-    let temp = `<p> ${name} 는 ${blog_url}  </p>`
-    $('#q1').append(temp);
+    const ref = collection(db, "user");
+    const q = query(ref, where("name", "==", nname));
+
+
+    const querySnapshot = await getDocs(q);
+    querySnapshot.forEach((doc) => {
+
+        const rrow = doc.data();
+        console.log(rrow);
+        const character_image = rrow['character'];
+        const comment = rrow['comment'];
+        const github_url = rrow['github_url'];
+        const mbti = rrow['mbti'];
+        const name = rrow['name'];
+        const image = rrow['image'];
+        const blog_url = rrow['blog_url'];
+       
+        const temp = `<p>       
+                            <br>  이름 = ${name}
+                            <br>  이미지 = ${image}
+                            <br>  캐릭터 이미지 = ${character_image}
+                            <br>  코멘트 = ${comment}
+                            <br>  mbti = ${mbti}
+                            <br>  SNS = ${blog_url}
+                            <br>  SNS = ${github_url}
+              
+                    </p>`
+        $('#q1').append(temp);
+
+    })
+
+
+
+
+    // const dataDoc = await getDoc(doc(db, 'user', "A0hyhIQz0JZsDRGm1tSk"));
+    // const rrow = dataDoc.data();
+    // console.log(rrow);
+
+
 
 
 
