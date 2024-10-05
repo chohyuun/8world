@@ -17,22 +17,76 @@
 </head>
 <body>
 <script type="module">
-    let data = `op=data&display=10&pageno=1`;
+    let htmlData = ''; // html로 보내줄 내용
+    let gameData = []; // 게임 데이터 저장
+    let allPageNum = ''; // 전체 페이지 개수
+    let searchGameTitle = ''; // 사용자가 입력한 게임 타이틀
+    let pageNum = 1; // 현재 페이지 번호
+    let buttonDirection = ''; // 페이지네이션 버튼 방향 확인을 위한 변수
+    let dataNum = ''; // 전체 게임 데이터 개수
+
+    let data = `op=game&display=10&pageno=1`; // fetch로 보낼 정보 url parameter
+
     const cardId = document.getElementById('card');
-    let htmlData = '';
-    let gameData = [];
+    const searchGameTitleId = document.getElementById('search_game');
+    const paginationId = document.getElementById('page_range');
 
 
-    const load = async () => {
+    // search button click event handler
+    const searchClickEvent = () => {
+        searchGameTitle = searchGameTitleId.value;
+        data = `op=game&display=10&pageno=${pageNum}&gametitle=${searchGameTitle}`; // fetch로 보낼 정보 url parameter
+
+        load(data);
+    }
+
+    // pagination click event handler
+    const paginationClickEvent = () => {
+        data = `op=game&display=10&pageno=${pageNum}&gametitle=${searchGameTitle}`; // fetch로 보낼 정보 url parameter
+
+        load(data);
+    }
+
+    // pagination 노출 함수
+    const pagination = () => {
+        let paginationRange = pageNum % 10 === 0 ? pageNum : (~~(pageNum/10) + 1) * 10;
+        let showPageRange = '';
+        let subPageNum = pageNum > ~~(allPageNum/10)*10 ? allPageNum - (~~(pageNum/10) * 10) - 1 : 9;
+
+        if (pageNum > ~~(allPageNum/10)*10){
+            paginationRange = allPageNum;
+        }
+
+        for(let i = paginationRange - subPageNum; i <= paginationRange; i++){
+            showPageRange += `
+                <li class="page_item">
+                    <a class="page-link page_num" style="${pageNum === i && 'color: #0d6efd'}" href="#">${i}</a>
+                </li>`;
+        }
+
+        paginationId.innerHTML = showPageRange;
+    }
+
+    // 데이터 불러오는 함수
+    const load = async (parameter) => {
         // 파일 가져오기
-        const response = await fetch(`https://www.grac.or.kr/WebService/GameSearchSvc.asmx/game?${data}`);
+        const response = await fetch(`https://www.grac.or.kr/WebService/GameSearchSvc.asmx/game?${parameter}`);
         // 텍스트 형식으로 해석
         const text = await response.text();
         // XML 형식으로 해석
         const xml = new DOMParser().parseFromString(text, 'application/xml');
 
+        // 데이터 리셋
+        gameData = [];
+        htmlData = '';
+
+        dataNum = xml.getElementsByTagName('tcount')[0].childNodes[0].nodeValue;
+
+        allPageNum = ~~(dataNum / 10 + 1);
+        let loopData = pageNum === allPageNum ? dataNum - ((allPageNum - 1) * 10) : 10;
+
         const gameDataInput = () => {
-            for (let i = 0; i < 10; i++) {
+            for (let i = 0; i < loopData; i++) {
                 gameData.push({
                     date: xml.getElementsByTagName('item')[i].getElementsByTagName('rateddate')[0].childNodes[0].nodeValue,
                     enterName: xml.getElementsByTagName('item')[i].getElementsByTagName('entname')[0].childNodes[0].nodeValue,
@@ -67,9 +121,54 @@
             })
         }
         htmlInput();
+        pagination();
+
+        // 변경 사항 발생 시 스크롤 제일 위로 이동
+        cardId.scrollTop = 0;
+
         cardId.innerHTML = `<div>${htmlData}</div>`;
     }
-    load();
+    load(data);
+
+    // 검색 버튼 클릭 이벤트
+    $('#searchButton').on('click', () => {
+        searchClickEvent();
+    });
+
+    // 페이지네이션 클릭 이벤트
+    $('.page_range').on('click', (e) => {
+        pageNum = Number(e.target.textContent);
+        paginationClickEvent();
+    });
+
+    // 페이지네이션 버튼 클릭 이벤트
+    $('.pagination_button').on('click', (e) => {
+        buttonDirection = e.target.currentSrc.includes('left') ? '-' : '+';
+
+        if (buttonDirection === '-') {
+            if (pageNum !== 0) {
+                pageNum -= 1;
+            }
+        } else {
+            if (pageNum !== allPageNum) {
+                pageNum += 1;
+            }
+        }
+
+        paginationClickEvent();
+    });
+
+    // 첫 페이지 버튼 클릭 이벤트
+    $('#first_page').on('click', (e) => {
+        pageNum = 1;
+        paginationClickEvent();
+    });
+
+    // 마지막 페이지 버튼 클릭 이벤트
+    $('#last_page').on('click', (e) => {
+        pageNum = allPageNum;
+        paginationClickEvent();
+    });
 </script>
 <div class="main">
     <div class="header">
@@ -77,11 +176,44 @@
         <div>게임 검색</div>
     </div>
     <div class="search_area">
-        <input class="c_input_box" type="text" placeholder="검색어 입력"/>
-        <img class='c_button_s' src="img/magnifying-glass-solid.svg" onclick=""/>
+        <input class="c_input_box" id="search_game" type="text" placeholder="게임 타이틀 검색"/>
+        <img class='c_button_s' id="searchButton" src="img/magnifying-glass-solid.svg" onclick=""/>
     </div>
-    <div class="card_area" id="card">
-    </div>
+    <div class="card_area" id="card"></div>
+
+    <nav aria-label="Page navigation example">
+        <ul class="pagination">
+            <li class="page-item">
+                <a class="page-link" href="#" id="first_page" aria-label="Next">
+                    <span class="pagination_button" aria-hidden="true">
+                        <img src="img/angles-left-solid.svg"/>
+                    </span>
+                </a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="#" aria-label="Previous">
+                    <span class="pagination_button" aria-hidden="true">
+                        <img src="img/chevron-left-solid.svg"/>
+                    </span>
+                </a>
+            </li>
+            <span class='page_range' id="page_range"></span>
+            <li class="page-item">
+                <a class="page-link" href="#" aria-label="Next">
+                    <span class="pagination_button" aria-hidden="true">
+                        <img src="img/chevron-right-solid.svg"/>
+                    </span>
+                </a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="#" id="last_page" aria-label="Next">
+                    <span class="pagination_button" aria-hidden="true">
+                        <img src="img/angles-right-solid.svg"/>
+                    </span>
+                </a>
+            </li>
+        </ul>
+    </nav>
 </div>
 </body>
 
