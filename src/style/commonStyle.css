@@ -105,3 +105,13 @@ body {
     }
 }
 
+/* home button style */
+.c_home_icon {
+    display: flex;
+    flex-direction: column;
+    cursor: pointer;
+    width: 40px;
+    height: 40px;
+    position: absolute;
+    left: 100px;
+}
