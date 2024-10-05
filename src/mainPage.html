@@ -45,6 +45,7 @@
     let arrayCount = 0; // 현재 위치한 row 확인을 위한 변수
     let characterImageArray = []; // character image data
     let imageArray = []; // image data
+    let nameArray = [];
 
     const leftArrow = document.getElementById('left_arrow');
     const rightArrow = document.getElementById('right_arrow');
@@ -73,7 +74,6 @@
             characterImageId.addEventListener('click', (e) => {
                 let target = e.target.currentSrc;
                 if(target !== undefined) {
-                    console.log(target.currentSrc)
                     userArray.forEach((e) => {
                         if (e.image === target) {
                             // Url path 로 사용자 정보 전송
@@ -96,21 +96,25 @@
                     if (i < userArray.length) {
                         characterImageArray.push(userArray[i].character_image);
                         imageArray.push(userArray[i]['image']);
+                        nameArray.push(userArray[i]['name']);
                     } else {
                         characterImageArray.push("img/raccoon.png");
                         imageArray.push("img/raccoon.png");
+                        nameArray.push('팀원이 없어...');
                     }
                 }
             } else {
                 for (let i = 0; i < userArray.length; i++) {
                     characterImageArray.push(userArray[i]['character_image']);
                     imageArray.push(userArray[i]['image']);
+                    nameArray.push(userArray[i]['name']);
                 }
             }
         } else {
             for (let i = 0; i < 3; i++) {
                 characterImageArray.push("img/raccoon.png");
                 imageArray.push("img/raccoon.png");
+                nameArray.push('팀원이 없어...');
             }
         }
 
@@ -124,35 +128,35 @@
                     <div class="image_card">
                         <img src="${characterImageArray[leftImageNum - 1 < 0 ? characterImageArray.length - 1 : leftImageNum - 1]}" class="image_card_body"/>
                         <img src="${imageArray[leftImageNum - 1 < 0 ? characterImageArray.length - 1 : leftImageNum - 1]}" class="image_card_back"/>
-                        <div class="user_name">${userArray[leftImageNum - 1 < 0 ? characterImageArray.length - 1 : leftImageNum - 1]['name']}</div>
+                        <div class="user_name">${nameArray[leftImageNum - 1 < 0 ? characterImageArray.length - 1 : leftImageNum - 1]}</div>
                     </div>
                 </div>
                 <div calss="content">
                     <div class="image_card image_left">
                         <img src="${characterImageArray[leftImageNum]}" class="image_card_body"/>
                         <img src="${imageArray[leftImageNum]}" class="image_card_back"/>
-                        <div class="user_name">${userArray[leftImageNum]['name']}</div>
+                        <div class="user_name">${nameArray[leftImageNum]}</div>
                     </div>
                 </div>
                 <div calss="content">
                     <div class="image_card image_middle">
                         <img src="${characterImageArray[arrayCount]}" class="image_card_body"/>
                         <img src="${imageArray[arrayCount]}" class="image_card_back"/>
-                        <div class="user_name">${userArray[arrayCount]['name']}</div>
+                        <div class="user_name">${nameArray[arrayCount]}</div>
                     </div>
                 </div>
                 <div calss="content">
                     <div class="image_card image_right">
                         <img src="${characterImageArray[rightImageNum]}" class="image_card_body"/>
                         <img src="${imageArray[rightImageNum]}" class="image_card_back"/>
-                        <div class="user_name">${userArray[rightImageNum]['name']}</div>
+                        <div class="user_name">${nameArray[rightImageNum]}</div>
                     </div>
                 </div>
                 <div calss="content">
                     <div class="image_card">
                         <img src="${characterImageArray[rightImageNum + 1 >= characterImageArray.length ? 0 : rightImageNum + 1]}"  class="image_card_body"/>
                         <img src="${imageArray[rightImageNum + 1 >= characterImageArray.length ? 0 : rightImageNum + 1]}"  class="image_card_back"/>
-                        <div class="user_name">${userArray[rightImageNum + 1 >= characterImageArray.length ? 0 : rightImageNum + 1]['name']}</div>
+                        <div class="user_name">${nameArray[rightImageNum + 1 >= characterImageArray.length ? 0 : rightImageNum + 1]}</div>
                     </div>
                 </div>
             </div>
@@ -202,15 +206,15 @@
 
     // 이미지 이동 버튼 클릭 이벤트
     leftArrow.addEventListener('click', () => {
-        changeImage(1);
-        imageMoveAnimation('-');
-        document.querySelector('.image_right').classList.add('image_big');
-    });
-
-    rightArrow.addEventListener('click', () => {
         changeImage(-1);
         imageMoveAnimation('+');
         document.querySelector('.image_left').classList.add('image_big');
+    });
+
+    rightArrow.addEventListener('click', () => {
+        changeImage(1);
+        imageMoveAnimation('-');
+        document.querySelector('.image_right').classList.add('image_big');
     });
 
     //html DOM 생성 완료 후 바로 이미지 노출 되기 위한 코드
@@ -223,11 +227,11 @@
     <div class="title">8 World</div>
     <div class="description">8조라니 러키비키쟈나~</div>
     <div class="slider">
-        <img src="img/caret-left-solid.svg" class="button_image left_button" id="left_arrow"/>
+        <img src="img/chevron-left-solid.svg" class="button_image left_button" id="left_arrow"/>
         <div class="item_area">
             <span class="item" id="character_image"></span>
         </div>
-        <img src="img/caret-right-solid.svg" class="button_image right_button" id="right_arrow"/>
+        <img src="img/chevron-right-solid.svg" class="button_image right_button" id="right_arrow"/>
     </div>
     <div class="footer">
         <button class="c_button c_button_m" onclick="location.href='addPage.html'">팀원 추가</button>
@@ -236,7 +240,7 @@
             <span>게임검색</span>
         </div>
     </div>
-    <div id="toast_message">없는 사용자 입니다.</div>
+    <div id="toast_message">없는 사용자입니다.</div>
 </div>
 
 </body>
