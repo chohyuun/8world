@@ -19,33 +19,34 @@
 
     <style>
         .area1 {
-            background-color: white;
             height: 100%;
-            width: 370PX;
+            width: 600PX;
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            border-style: groove;
+            background-color: transparent;
+            border-width: 10px;
+            border-color: white;
+            overflow: hidden;
         }
 
         .area2 {
-            background-color: white;
+            background-color: transparent;
             height: 100%;
             width: 40%;
         }
-
-        .area3 {
-            background-color: white;
-            height: 100%;
-            width: 35%;
-        }
-
         .area2a {
-            width: 100%;
-            height: 80%;
+            color: white;
+            width: 400px;
+            height: 70%;
             background-color: transparent;
             word-break: break-all;
-
             min-width: 100%;
             position: relative;
             display: flex;
-            flex-direction: row;
+            flex-direction: column;
             margin: auto;
             align-items: center;
             overflow: hidden;
@@ -54,42 +55,26 @@
             border: 2 solid black;
             border-radius: 20px;
             margin-top: 5PX;
+            font-size: x-large;
+            
+        }
 
+        #q1 {
+            object-fit: cover;
         }
 
         .area2b {
+            height: 20%;
+            background-color:bisque;
             display: flex;
             flex-direction: row;
             justify-content: center;
             align-items: center;
-        }
-
-        .area3a {
-            width: 100%;
-            height: 80%;
-            background-color: transparent;
-
-            min-width: 100%;
-            display: flex;
-            flex-direction: row;
-            margin: auto;
-            align-items: center;
-            overflow: hidden;
-            justify-content: center;
-            object-fit: contain;
-            border: 5px solid transparent;
             border-radius: 20px;
-            margin-top: 5PX;
 
         }
 
-        .area3b {
-            display: flex;
-            flex-direction: row;
-            justify-content: right;
-            align-items: right;
-            margin-right: 40px;
-        }
+
 
         .addCharacter {
             min-width: 100%;
@@ -113,6 +98,23 @@
             align-items: center;
             margin: 40px 2px 2px 2px;
         }
+
+        .content {
+            margin: 5px 0px 5px 0px;
+
+        }
+
+        .aaa {
+            background-color: red;
+        }
+
+        .bbb {
+            background-color: green;
+        }
+
+        .ccc {
+            background-color: blue;
+        }
     </style>
 
 </head>
@@ -126,37 +128,20 @@
                 <div class="description">informatoin</div>
             </span>
         </div>
-        <div class="addCharacter">
+        <div class="addCharacter" id="detailData">
             <div class="area1">
-                <div class="topp" id="q1"></div>
+                <div class="topp" id="q1">
+                    여기에 이미지 추가 나와야디는데
+                </div>
             </div>
-            <div class="area2">
-                <div class="area2a" id="q2">
-
-
-                </div>
-                <div class="area2b">
-                    <button class="c_button" id="admendBtn">수정</button>
-                    <button class="c_button" id="deleteBtn">삭제</button>
-
-                </div>
-
-            </div>
-            <div class="area3">
-                <div class="area3a" id="q3">
-
-                </div>
-                <div class="area3b">
-                    <a href="..."><img class="img-github" src="img/icon-github.png" alt="$" /></a>
-                    <a href="...."><img class="img-velog" src="img/icon-velog.png" alt="블로그 주소" /></a>
-                </div>
-
+            <div class="area2" id="q2">
             </div>
         </div>
-
+        <div class="button">
+            <button class="c_button" id="admendBtn">수정</button>
+            <button class="c_button" id="deleteBtn">삭제</button>
+        </div>
     </div>
-
-
 
     <!-- MODAL   -->
     <div id="modalContainer" class="hidden">
@@ -246,9 +231,9 @@
     })
 
     // 이미지 노출 테스트
-    // var asd = document.getElementById('q1').innerHTML = `
-    //  <img src="${userData.character_image}"/>
-    // `
+    var asd = document.getElementById('q1').innerHTML = `
+      <img src="${userData.image}"/>
+     `
 
     const ref = collection(db, "user");
     const q = query(ref, where("name", "==", userData.name));
@@ -269,19 +254,16 @@
         const image = rrow['image'];
         const blog_url = rrow['blog_url'];
 
-        const tempArea1 = ` <p>       
-                            <br>  이름 = ${name}
-                            </p>`
-        $('#q1').append(tempArea1);
-
-        $('#q2').append();
-
-        const tempArea3 = ` <p>       
-                            <br>  코멘트 = ${comment}
-                            <br>  mbti = ${mbti}
-                            </p>`
-        $('#q3').append(tempArea3);
-
+        const data4 = `  <div class="area2a" >
+                            <p class="content">이름<br>${name}</p><br>
+                            <p class="content">MBTI<br>${mbti}</p><br>
+                            <p class="content">한마디<br>${comment}</p>   
+                        </div>
+                        <div class="area2b" id="q2">
+                              <a href="${github_url}"><img class="img-github" src="img/icon-github.png" alt="..." /></a>
+                              <a href="${blog_url}"><img class="img-velog" src="img/icon-velog.png" alt=".." /></a>
+                        </div>`
+        $('#q2').append(data4);
     })
 
     //버튼 관련 이벤트
