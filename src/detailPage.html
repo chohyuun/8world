@@ -14,13 +14,105 @@
     <!--common style, js 파일 import-->
     <link href="style/commonStyle.css" rel="stylesheet" />
     <link href="style/detailPageStyle.css" rel="stylesheet" />
+    <link href="style/addPageStyle.css" rel="stylesheet" />
     <title>8Woårld-상세</title>
 
     <style>
+        .area1 {
+            background-color: white;
+            height: 100%;
+            width: 370PX;
+        }
 
+        .area2 {
+            background-color: white;
+            height: 100%;
+            width: 40%;
+        }
 
+        .area3 {
+            background-color: white;
+            height: 100%;
+            width: 35%;
+        }
 
+        .area2a {
+            width: 100%;
+            height: 80%;
+            background-color: transparent;
+            word-break: break-all;
 
+            min-width: 100%;
+            position: relative;
+            display: flex;
+            flex-direction: row;
+            margin: auto;
+            align-items: center;
+            overflow: hidden;
+            justify-content: center;
+            object-fit: contain;
+            border: 2 solid black;
+            border-radius: 20px;
+            margin-top: 5PX;
+
+        }
+
+        .area2b {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .area3a {
+            width: 100%;
+            height: 80%;
+            background-color: transparent;
+
+            min-width: 100%;
+            display: flex;
+            flex-direction: row;
+            margin: auto;
+            align-items: center;
+            overflow: hidden;
+            justify-content: center;
+            object-fit: contain;
+            border: 5px solid transparent;
+            border-radius: 20px;
+            margin-top: 5PX;
+
+        }
+
+        .area3b {
+            display: flex;
+            flex-direction: row;
+            justify-content: right;
+            align-items: right;
+            margin-right: 40px;
+        }
+
+        .addCharacter {
+            min-width: 100%;
+            height: 800px;
+            position: relative;
+            display: flex;
+            flex-direction: row;
+            margin: auto;
+            align-items: center;
+            overflow: hidden;
+            justify-content: center;
+            object-fit: contain;
+            border: 5px solid transparent;
+            border-radius: 20px;
+        }
+
+        .topp {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin: 40px 2px 2px 2px;
+        }
     </style>
 
 </head>
@@ -28,32 +120,44 @@
 <body>
 
     <div class="main">
-        <div class="title"> 팀원 이름 </div>
-        <div class="topp" id="q1"> 팀원 정보 나오게</div>
+        <div class="header"> <img src="img/home.svg" class="home_icon" id="mainBtn" />
+            <span>
+                <div class="title">팀 원 정 보</div>
+                <div class="description">informatoin</div>
+            </span>
+        </div>
+        <div class="addCharacter">
+            <div class="area1">
+                <div class="topp" id="q1"></div>
+            </div>
+            <div class="area2">
+                <div class="area2a" id="q2">
 
-        <div class="slider">
-            <div class="slides">
-                <span class="item" id="character_image">
 
-                </span>
+                </div>
+                <div class="area2b">
+                    <button class="c_button" id="admendBtn">수정</button>
+                    <button class="c_button" id="deleteBtn">삭제</button>
+
+                </div>
+
+            </div>
+            <div class="area3">
+                <div class="area3a" id="q3">
+
+                </div>
+                <div class="area3b">
+                    <a href="..."><img class="img-github" src="img/icon-github.png" alt="$" /></a>
+                    <a href="...."><img class="img-velog" src="img/icon-velog.png" alt="블로그 주소" /></a>
+                </div>
+
             </div>
         </div>
-        <div class="btn">
-            <button class="c_button" id="mainBtn">Main</button>
-            <button class="c_button" id="admendBtn">수정</button>
-            <button class="c_button" id="deleteBtn">삭제</button>
-
-
-
-            <a href="..."><img class="img-github" src="img/icon-github.png"
-                    alt="깃허브 주소" /></a>
-            <a href="...."><img class="img-velog" src="img/icon-velog.png"
-                    alt="블로그 주소" /></a>
-        </div>
-
-
 
     </div>
+
+
+
     <!-- MODAL   -->
     <div id="modalContainer" class="hidden">
         <div id="modalContent">
@@ -109,11 +213,11 @@
     });
 
 
-//전체 데이터 가져오기  나중에 삭제
+    //전체 데이터 가져오기  나중에 삭제
     let docs = await getDocs(collection(db, "user"));
     docs.forEach((doc) => {
         let row = doc.data();
-       
+
         let blog_url = row['blog_url'];
         let character_image = row['character'];
         let comment = row['comment'];
@@ -121,7 +225,7 @@
         let mbti = row['mbti'];
         let name = row['name'];
         let image = row['image'];
-       
+
     });
 
     // receivedData: url parameter 로 받아온 사용자 캐릭터 사진 문자열만 저장하기 위한 변수
@@ -136,15 +240,15 @@
 
     // user 데이터 중에 이미지가 같은 유저의 데이터를 사용
     userArray.forEach((e) => {
-        if(e['character_image'] === receivedData){
+        if (e['character_image'] === receivedData) {
             userData = e;
         }
     })
 
     // 이미지 노출 테스트
-    document.getElementById('q1').innerHTML = `
-        <img src="${userData.character_image}"/>
-    `
+    // var asd = document.getElementById('q1').innerHTML = `
+    //  <img src="${userData.character_image}"/>
+    // `
 
     const ref = collection(db, "user");
     const q = query(ref, where("name", "==", userData.name));
@@ -155,6 +259,8 @@
 
         const rrow = doc.data();
 
+        console.log(rrow);
+
         const character_image = rrow['character'];
         const comment = rrow['comment'];
         const github_url = rrow['github_url'];
@@ -163,18 +269,18 @@
         const image = rrow['image'];
         const blog_url = rrow['blog_url'];
 
-        const temp = `<p>       
+        const tempArea1 = ` <p>       
                             <br>  이름 = ${name}
-                            <br>  이미지 = ${image}
-                            <br>  캐릭터 이미지 = ${character_image}
+                            </p>`
+        $('#q1').append(tempArea1);
+
+        $('#q2').append();
+
+        const tempArea3 = ` <p>       
                             <br>  코멘트 = ${comment}
                             <br>  mbti = ${mbti}
-                            <br>  SNS = ${blog_url}
-                            <br>  SNS = ${github_url}
-              
-                    </p>`
-
-        $('#q1').append(temp);
+                            </p>`
+        $('#q3').append(tempArea3);
 
     })
 
@@ -192,7 +298,7 @@
         // function(){
         //       await deleteData(doc(db, "user",))
         // }
-       
+
     });
 </script>
 </body>
