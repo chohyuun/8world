@@ -14,108 +14,9 @@
     <!--common style, js 파일 import-->
     <link href="style/commonStyle.css" rel="stylesheet" />
     <link href="style/detailPageStyle.css" rel="stylesheet" />
-    <link href="style/addPageStyle.css" rel="stylesheet" />
     <title>8Woårld-상세</title>
 
-    <style>
-        .area1 {
-            height: 100%;
-            width: 600PX;
-            display: flex;
-            flex-direction: row;
-            justify-content: center;
-            align-items: center;
-            border-style: groove;
-            background-color: transparent;
-            border-width: 10px;
-            border-color: white;
-            overflow: hidden;
-        }
-
-        .area2 {
-            background-color: transparent;
-            height: 100%;
-            width: 40%;
-        }
-        .area2a {
-            color: white;
-            width: 400px;
-            height: 70%;
-            background-color: transparent;
-            word-break: break-all;
-            min-width: 100%;
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            margin: auto;
-            align-items: center;
-            overflow: hidden;
-            justify-content: center;
-            object-fit: contain;
-            border: 2 solid black;
-            border-radius: 20px;
-            margin-top: 5PX;
-            font-size: x-large;
-            
-        }
-
-        #q1 {
-            object-fit: cover;
-        }
-
-        .area2b {
-            height: 20%;
-            background-color:bisque;
-            display: flex;
-            flex-direction: row;
-            justify-content: center;
-            align-items: center;
-            border-radius: 20px;
-
-        }
-
-
-
-        .addCharacter {
-            min-width: 100%;
-            height: 800px;
-            position: relative;
-            display: flex;
-            flex-direction: row;
-            margin: auto;
-            align-items: center;
-            overflow: hidden;
-            justify-content: center;
-            object-fit: contain;
-            border: 5px solid transparent;
-            border-radius: 20px;
-        }
-
-        .topp {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            margin: 40px 2px 2px 2px;
-        }
-
-        .content {
-            margin: 5px 0px 5px 0px;
-
-        }
-
-        .aaa {
-            background-color: red;
-        }
-
-        .bbb {
-            background-color: green;
-        }
-
-        .ccc {
-            background-color: blue;
-        }
-    </style>
+    
 
 </head>
 
@@ -162,8 +63,8 @@
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
     import { getFirestore } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
     import { collection, addDoc, query, where } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
-    import { getDocs, doc, getDoc } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
-    import { deleteDoc } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+    import { getDocs, getDoc } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+    import { doc, deleteDoc } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
 
 
 
@@ -223,12 +124,15 @@
         userArray.push(doc.data());
     });
 
+
     // user 데이터 중에 이미지가 같은 유저의 데이터를 사용
     userArray.forEach((e) => {
         if (e['character_image'] === receivedData) {
             userData = e;
         }
     })
+
+
 
     // 이미지 노출 테스트
     var asd = document.getElementById('q1').innerHTML = `
@@ -276,10 +180,20 @@
     });
 
 
-    $('#deleteBtn').on('click', () => {
-        // function(){
-        //       await deleteData(doc(db, "user",))
-        // }
+    $('#modalDeleteBtn').on('click', () => {
+
+        var deleteName = userData.name;
+
+        async function plzdelete() {
+            await deleteDoc(doc(db, "user",deleteName));
+
+        }
+
+        const onDelete = async () => {
+            await deleteDoc(doc(db, "user", deleteName)); 
+        };
+
+        window.location.href = "mainPage.html";
 
     });
 </script>
