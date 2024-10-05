@@ -5,9 +5,84 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <title>8World-게임 검색</title>
+
+    <!--common style, js 파일 import-->
+    <link href="style/commonStyle.css" rel="stylesheet"/>
+    <link href="style/gameSearchStyle.css" rel="stylesheet"/>
 </head>
 <body>
+<script type="module">
+    let data = `op=data&display=10&pageno=1`;
+    const cardId = document.getElementById('card');
+    let htmlData = '';
+    let gameData = [];
 
+
+    const load = async () => {
+        // 파일 가져오기
+        const response = await fetch(`https://www.grac.or.kr/WebService/GameSearchSvc.asmx/game?${data}`);
+        // 텍스트 형식으로 해석
+        const text = await response.text();
+        // XML 형식으로 해석
+        const xml = new DOMParser().parseFromString(text, 'application/xml');
+
+        const gameDataInput = () => {
+            for (let i = 0; i < 10; i++) {
+                gameData.push({
+                    date: xml.getElementsByTagName('item')[i].getElementsByTagName('rateddate')[0].childNodes[0].nodeValue,
+                    enterName: xml.getElementsByTagName('item')[i].getElementsByTagName('entname')[0].childNodes[0].nodeValue,
+                    genre: xml.getElementsByTagName('item')[i].getElementsByTagName('genre')[0].childNodes[0].nodeValue,
+                    givenrate: xml.getElementsByTagName('item')[i].getElementsByTagName('givenrate')[0].childNodes[0].nodeValue,
+                    gametitle: xml.getElementsByTagName('item')[i].getElementsByTagName('gametitle')[0].childNodes[0].nodeValue,
+                    platform: xml.getElementsByTagName('item')[i].getElementsByTagName('platform')[0].childNodes[0].nodeValue,
+                })
+            }
+        }
+
+        gameDataInput();
+
+        const htmlInput = () => {
+            gameData.forEach((value, i) => {
+                htmlData += `
+                <div class="card">
+                    <div class="date">날짜 : ${value.date}</div>
+                    <div class="card_division">
+                        <div class="game_info">
+                            <div class="enterName">엔터 이름 : ${value.enterName}</div>
+                            <div class="gameTitle">게임 이름 : ${value.gametitle}</div>
+                        </div>
+                        <div class="game_info">
+                            <div class="genre">장르 : ${value.genre}</div>
+                            <div class="givenrate">심의 등급 : ${value.givenrate}</div>
+                            <div class="platform">플랫폼 : ${value.platform}</div>
+                        </div>
+                    </div>
+                </div>
+            `
+            })
+        }
+        htmlInput();
+        cardId.innerHTML = `<div>${htmlData}</div>`;
+    }
+    load();
+</script>
+<div class="main">
+    <div class="header">
+        <img class='c_home_icon' src="img/home.svg" onclick="window.location.href='mainPage.html'"/>
+        <div>게임 검색</div>
+    </div>
+    <div class="search_area">
+        <input class="c_input_box" type="text" placeholder="검색어 입력"/>
+        <img class='c_button_s' src="img/magnifying-glass-solid.svg" onclick=""/>
+    </div>
+    <div class="card_area" id="card">
+    </div>
+</div>
 </body>
+
 </html>

@@ -1,0 +1,52 @@
+body {
+    height: 100vh;
+}
+
+.header {
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    div {
+        margin-left: -40px;
+        font-size: 40px;
+    }
+}
+
+.card {
+    display: flex;
+    flex-direction: column;
+    background: #fff;
+    color: #000;
+    margin: 10px;
+    padding: 10px 20px;
+    border-radius: 10px;
+    font-size: 12px;
+
+}
+
+.card_division {
+    display: flex;
+    flex-direction: row;
+}
+
+.game_info {
+    flex: 1;
+}
+
+.search_area {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin: 10px;
+    align-items: center;
+    input {
+        width: 100%;
+        margin-right: 10px;
+    }
+    img {
+        width: 30px;
+        height: 30px;
+    }
+}
+
+
