@@ -17,6 +17,7 @@
         import { getFirestore } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
         import { collection, addDoc } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
         import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-storage.js";
+        import {getDocs} from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
 
         // Your web app's Firebase configuration
         const firebaseConfig = {
@@ -27,48 +28,65 @@
             messagingSenderId: "892743835529",
             appId: "1:892743835529:web:b4eef016af8ecfb8884b58"
         };
-
+        
         // Initialize Firebase
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
+        const data = await getDocs(collection(db, "user"));
         const storage = getStorage(app);
+
+        let userArray = [];
+        let maxNum = 0; // 사용자 id 추가를 위한 num check
+
+        data.forEach((doc) => {
+            const docs = doc.data();
+
+            userArray.push(Object(docs));
+        });
+
+        // user_id 추가를 위해 number 가장 큰 값 체크
+        for(let i = 0; i < userArray.length; i++) {
+            if(Number(userArray[i]['user_id']) > maxNum) {
+                maxNum = Number(userArray[i]['user_id']);
+            }
+        }
 
         $("#addUserBtn").click(async function () {
             let name = $('#name').val();
-            if (name.length == 0) {
+            if (name.length === 0) {
                 alert('이름을 입력해주세요.');
                 $('#name').focus();
                 return false;
             }
             let mbti = $('#mbti').val();
-            if (mbti.length == 0) {
+            if (mbti.length === 0) {
                 alert('MBTI를 입력해주세요.');
                 $('#mbti').focus();
                 return false;
             }
             let github_url = $('#github_url').val();
-            if (github_url.length == 0) {
+            if (github_url.length === 0) {
                 alert('github 주소를 입력해주세요.');
                 $('#github_url').focus();
                 return false;
             }
             let blog_url = $('#blog_url').val();
-            if (blog_url.length == 0) {
+            if (blog_url.length === 0) {
                 alert('블로그 주소를 입력해주세요.');
                 $('#blog_url').focus();
                 return false;
             }
             let comment = $('#comment').val();
-            if (comment.length == 0) {
+            if (comment.length === 0) {
                 alert('한마디를 입력해주세요.');
                 $('#comment').focus();
                 return false;
             }
-            if ($('#character_image').val() == 0) {
+            if ($('#character_image').val() === 0) {
                 alert('캐릭터 사진을 등록해주세요.');
                 return false;
             }
-            if ($('#image').val() == 0) {
+            if ($('#image').val() === 0) {
                 alert('프로필 사진을 등록해주세요.');
                 return false;
             }
@@ -82,7 +100,8 @@
                 'blog_url': blog_url,
                 'comment': comment,
                 'character_image': character_image,
-                'image': image
+                'image': image,
+                'user_id' : (maxNum + 1).toString(),
             };
             
             await addDoc(collection(db, "user"), doc);
@@ -94,7 +113,6 @@
             return new Promise((resolve, reject) => { 
                 let imageRef = ref(storage, path + file.name);
                 const uploadTask = uploadBytesResumable(imageRef, file);
-                console.log('check');
 
                 uploadTask.on('state_changed',
                     (snapshot) => {
@@ -107,7 +125,6 @@
                     () => {
 
                         getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-                            console.log(downloadURL);
                             resolve(downloadURL);
                         });
                     }
@@ -167,8 +184,7 @@
             // img 삭제하기.
             const character_image_view = document.getElementById('character_image_view');
             if (character_image_view != null) {
-                console.log(character_image_view.className);
-                if (character_image_view.className == "") { URL.revokeObjectURL(character_image_view.src); };
+                if (character_image_view.className === "") { URL.revokeObjectURL(character_image_view.src); };
                 container.removeChild(character_image_view);
             }
 
@@ -201,8 +217,7 @@
             // img 삭제하기.
             const image_view = document.getElementById('image_view');
             if (image_view != null) {
-                console.log(image_view.className);
-                if (image_view.className == "") { URL.revokeObjectURL(image_view.src); };
+                if (image_view.className === "") { URL.revokeObjectURL(image_view.src); };
                 container.removeChild(image_view);
             }
 
