@@ -42,6 +42,12 @@ body {
     padding: 0 10px;
     border: 1px solid rgb(123, 123, 123);
     border-radius: 8px;
+
+    &:focus, &:active {
+        box-shadow: 0 0 3px 0.1rem #85c1e9;
+        border: 1px solid #5dade2;
+        outline: none;
+    }
 }
 
 /* button style */
