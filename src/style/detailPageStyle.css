@@ -163,6 +163,8 @@ margin: 0px 20px 0px 3px;
     align-items: center;
     border-radius: 20px;
 
+
+
 }
 
 
@@ -190,10 +192,6 @@ margin: 0px 20px 0px 3px;
     margin: 40px 2px 2px 2px;
 }
 
-.content {
-    margin: 5px 0px 5px 0px;
-
-}
 
 .home_icon {
     display: flex;
@@ -207,3 +205,7 @@ margin: 0px 20px 0px 3px;
 }
 
 
+.content {
+    margin: 5px 0px 5px 0px;
+
+}
