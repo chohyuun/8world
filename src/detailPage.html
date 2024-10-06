@@ -16,7 +16,7 @@
     <link href="style/detailPageStyle.css" rel="stylesheet" />
     <title>8Woårld-상세</title>
 
-    
+
 
 </head>
 
@@ -186,15 +186,15 @@
         var deleteName = userData.name;
 
         async function plzdelete() {
-            await deleteDoc(doc(db, "user",deleteName));
+            await deleteDoc(doc(db, "user", userData));
 
         }
 
         const onDelete = async () => {
-            await deleteDoc(doc(db, "user", deleteName)); 
+            await deleteDoc(doc(db, "user", userData));
         };
-
-       // window.location.href = "mainPage.html";
+        console.log("유저 데이터가 삭제 되었습니다.")
+        // window.location.href = "mainPage.html";
 
     });
 </script>
