@@ -5,7 +5,7 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link href="style/commonStyle.css" rel="stylesheet" />
+    <link href="style/commonStyle.css" rel="stylesheet"/>
     <link href="style/addPageStyle.css" rel="stylesheet"/>
     <title>8World-추가</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
@@ -13,11 +13,16 @@
     <script type="module">
         // firebase setting
         // Import the functions you need from the SDKs you need
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
-        import { getFirestore } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
-        import { collection, addDoc } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
-        import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-storage.js";
-        import {getDocs} from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+        import {initializeApp} from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
+        import {getFirestore} from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+        import {collection, updateDoc} from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+        import {
+            getStorage,
+            ref,
+            uploadBytesResumable,
+            getDownloadURL
+        } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-storage.js";
+        import {getDocs, setDoc, doc} from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
 
         // Your web app's Firebase configuration
         const firebaseConfig = {
@@ -28,7 +33,7 @@
             messagingSenderId: "892743835529",
             appId: "1:892743835529:web:b4eef016af8ecfb8884b58"
         };
-        
+
         // Initialize Firebase
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
@@ -37,16 +42,36 @@
 
         let userArray = [];
         let maxNum = 0; // 사용자 id 추가를 위한 num check
+        // todo: 상세 화면 완료 되면 수정
+        let updateUser; // 수정 버튼으로 넘어온 사용자의 경우 사용할 변수
+        // let updateUser = doc(db, 'user', '10');
+        let updateUserData;
 
         data.forEach((doc) => {
             const docs = doc.data();
 
             userArray.push(Object(docs));
+            if (updateUser !== undefined && docs.user_id === updateUser.id) {
+                updateUserData = docs;
+            }
         });
 
+        if (updateUser) {
+            document.getElementById('title').innerHTML = `정보 수정`;
+            document.getElementById('description').innerHTML = `8World에 캐릭터 정보 수정하기`;
+            $('#name').attr('value', updateUserData.name);
+            $('#mbti').attr('value', updateUserData.mbti);
+            $('#github_url').attr('value', updateUserData.github_url);
+            $('#blog_url').attr('value', updateUserData.blog_url);
+            $('#comment').attr('value', updateUserData.comment);
+            $('#character_image_view').attr('src', updateUserData.character_image);
+            $('#image_view').attr('src', updateUserData.image);
+        }
+
+
         // user_id 추가를 위해 number 가장 큰 값 체크
-        for(let i = 0; i < userArray.length; i++) {
-            if(Number(userArray[i]['user_id']) > maxNum) {
+        for (let i = 0; i < userArray.length; i++) {
+            if (Number(userArray[i]['user_id']) > maxNum) {
                 maxNum = Number(userArray[i]['user_id']);
             }
         }
@@ -90,161 +115,190 @@
                 alert('프로필 사진을 등록해주세요.');
                 return false;
             }
+
             let character_image = await uploadImage(document.getElementById('character_image').files[0], 'character_image/');
             let image = await uploadImage(document.getElementById('image').files[0], 'image/');
 
-            let doc = {
+            let docs = {
                 'name': name,
                 'mbti': mbti,
                 'github_url': github_url,
                 'blog_url': blog_url,
                 'comment': comment,
-                'character_image': character_image,
-                'image': image,
-                'user_id' : (maxNum + 1).toString(),
+                'character_image': character_image === undefined ? updateUserData.character_image : character_image,
+                'image': image === undefined ? updateUserData.image : image,
+                'user_id': updateUser?.id ? updateUser?.id : (maxNum + 1).toString(),
             };
-            
-            await addDoc(collection(db, "user"), doc);
-            alert('등록 완료!');
-            location.href='mainPage.html';
+
+            if (updateUser) {
+                // 수정 시 사용
+                let sameDataCheck = Object.keys(docs).every((key) => {
+                    return docs[key] === updateUserData[key];
+                });
+
+                if (sameDataCheck) {
+                    alert('변경사항이 없습니다.');
+                } else {
+                    // user 수정
+                    await updateDoc(doc(db, 'user', updateUser.id), docs);
+
+                    alert('등록 완료!');
+                    location.href = 'mainPage.html';
+                }
+            } else {
+                // user 특정을 위한 로우 넘버 부여
+                await setDoc(doc(db, "user", (maxNum + 1).toString()), docs);
+
+                alert('등록 완료!');
+                location.href = 'mainPage.html';
+            }
         })
 
         function uploadImage(file, path) {
-            return new Promise((resolve, reject) => { 
-                let imageRef = ref(storage, path + file.name);
-                const uploadTask = uploadBytesResumable(imageRef, file);
+            if (file !== undefined) {
+                return new Promise((resolve, reject) => {
+                    let imageRef = ref(storage, path + file.name);
+                    const uploadTask = uploadBytesResumable(imageRef, file);
 
-                uploadTask.on('state_changed',
-                    (snapshot) => {
-                        
-                    }, 
-                    (error) => {
-                        alert('error !');
-                        reject("실패");
-                    }, 
-                    () => {
+                    uploadTask.on('state_changed',
+                        (snapshot) => {
 
-                        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-                            resolve(downloadURL);
-                        });
-                    }
-                );
-            })
+                        },
+                        (error) => {
+                            alert('error !');
+                            reject("실패");
+                        },
+                        () => {
+                            getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+                                resolve(downloadURL);
+                            });
+                        }
+                    );
+                })
+            }
         }
     </script>
 </head>
 <body>
-    <div class="main">
-        <div class="header">
-            <img src="img/home.svg" class="c_home_icon" onclick="location.href='mainPage.html'"/>
-            <span>
-                <div class="title">팀원 추가</div>
-                <div class="description">8 World에 캐릭터 생성하기</div>
+<div class="main">
+    <div class="header">
+        <img src="img/home.svg" class="c_home_icon" onclick="location.href='mainPage.html'"/>
+        <span>
+                <div class="title" id="title">팀원 추가</div>
+                <div class="description" id="description">8 World에 캐릭터 생성하기</div>
             </span>
+    </div>
+    <div class="addCharacter">
+        <input type="file" id="character_image" class="character_image_upload" accept="image/*" required
+               style="display: none;">
+        <div class="character_image_area">
+            <div id="character_image_box">
+                <img src="https://firebasestorage.googleapis.com/v0/b/world-6960c.appspot.com/o/character_image%2Fpngwing.com.png?alt=media&token=ebf9ec46-f63d-4420-8a94-2a664c9f0f1f"
+                     id="character_image_view" class="default_img">
+            </div>
+            <div class="image_tag">캐릭터 사진</div>
         </div>
-        <div class="addCharacter">
-            <input type="file" id="character_image" class="character_image_upload" accept="image/*" required style="display: none;">
-            <div class="character_image_area">
-                <div id="character_image_box">
-                    <img src="https://firebasestorage.googleapis.com/v0/b/world-6960c.appspot.com/o/character_image%2Fpngwing.com.png?alt=media&token=ebf9ec46-f63d-4420-8a94-2a664c9f0f1f" id="character_image_view" class="default_img">
-                </div>
-                <div class="image_tag">캐릭터 사진</div>
+        <div class="inputBox">
+            <input type="file" id="image" class="image_upload" accept="image/*" required style="display: none;">
+            <div id="image_box">
+                <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAADhCAMAAAAJbSJIAAAAM1BMVEXk5ueutLfn6eqrsbTp6+zg4uOwtrnJzc/j5earsbW0uby4vcDQ09XGyszU19jd3+G/xMamCvwDAAAFLklEQVR4nO2d2bLbIAxAbYE3sDH//7WFbPfexG4MiCAcnWmnrzkjIRaD2jQMwzAMwzAMwzAMwzAMwzAMwzAMwzAMwzAMwzAMw5wQkHJczewxZh2lhNK/CBOQo1n0JIT74/H/qMV0Z7GU3aCcVPuEE1XDCtVLAhgtpme7H0s1N1U7QjO0L8F7llzGeh1hEG/8Lo7TUmmuSrOfns9xnGXpXxsONPpA/B6OqqstjC6Ax/0ujkNdYQQbKNi2k64qiiEZ+ohi35X+2YcZw/WujmslYewiAliVYrxgJYrdwUmwXsU+RdApUi83oNIE27YvrfB/ZPg8+BJETXnqh9CVzBbTQHgojgiCvtqU9thFJg/CKz3VIMKMEkIXxIWqIpIg2SkjYj+xC816mrJae2aiWGykxRNsW0UwiJghJDljYI5CD8GRiCtIsJxizYUPQ2pzItZy5pcisTRdk/a9m4amtNNfBuQkdVhSaYqfpNTSFGfb9GRIakrE2Pm+GFLaCQPqiu0OpWP+HMPQQcgQMiQprWXNmsVwIjQjYi/ZrhAqNTCgr2gu0Jnz85RSSjso0HkMFZ0YZjKkc26a/jlmh9JiDyDxi9oeorTYAzZkwwoMz19pzj9bnH/GP/+qbchjSGflneWYhtTuKdMOmNKZcJ5TjInQKcYXnESd/jQxy0ENpULTNGOGgxpap/oyw9pbUAqhfx2Dbkhovvfgz4iUzoM9+GlK6/Mh4q29hyC1mwro30hpVVLPF9wYQr71RazOeM5/cw81iBRD+A03aM9/C/obbrKjbYSpCmIVG3qT/Q8oeUo3Rz0IL7vI1tEbCB9pSiu8I/aV8x3Kg/BGWrWp4ZVs0nZfmAoEG4h/61yHYIJiFSl6Q0Vk6tTW1N8kYp8hdOkfHYYMXd2Qft+8CYwqYDSKvqIh+MCF8Wgca2u/cwdgeW3TtuVn6+1oBs3yLo5C2JpK6CvQzGpfUkz9UG/87gCsi5o2LIXolxN0FbwAsjOLEr+YJmXn7iR6N0BCt5p5cMxm7eAsfS+/CACQf4CTpKjzgkvr2cVarVTf96372yut7XLJ1sa7lv6VcfgYrWaxqr3Wlo1S6pvStr22sxOtTNPLzdY3nj20bPP+ejFdJYkLsjGLdtPBEbe/mr2bQKiXWJDroA+vtzc0p9aahuwqHMDYrQEXHEw9jwQl3drMpts9JBU1SdktPe5FBRdJQ6bwXBpa57ib2A8kukQDzMjh++Uo7Fo6Wd02Pkf4fknqoo4HtvAIjsqUcjx6DIPgWCaOML9rKI/oqD9/lgNrn+eF+p7j8tnzHBiR7+kdUGw/+V1Kzkc75mMy6U+FMaxjPibiM1U1uGM+puInHpmALZCgP4pt7i840MV8+0R1zPsRB6UTcqpizncYwZ89syDydfyWCwXB1l8/zRNGWbTG/GHKUm9AkxHMc/EGSk3z2+ArEhPEV5TUBLEvUGFcjEUH80J/jveTGOAJEljJbILWGQT3zRYiwuKsUXN1EEJAzBhRJFll7mBUG7KD8EqPkKekBREaL8hMDZLQSG6AQjtHPYmvTQnX0TtpC1SYCe2YdkkyLP3jj5BSbKiuR585eQhTgoje6yIb0Yb0C+mV6EYvebqw5SDy2WmubogZiF2AVxPC2FpDf8H2Q9QWo6IkjUxTWVEI3WY/wrCeSuqJ+eRWzXR/JXwgVjUMozbCOfoEZiSiKVGepqv5CJ8RyR4D7xBeamqa7z3BJ/z17JxuBPdv93d/a2Ki878MMAzDMAzDMAzDMAzDMF/KP09VUmxBAiI3AAAAAElFTkSuQmCC"
+                     id="image_view" class="default_img">
             </div>
-            <div class="inputBox">
-                <input type="file" id="image" class="image_upload" accept="image/*" required style="display: none;">
-                <div id="image_box">
-                    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAADhCAMAAAAJbSJIAAAAM1BMVEXk5ueutLfn6eqrsbTp6+zg4uOwtrnJzc/j5earsbW0uby4vcDQ09XGyszU19jd3+G/xMamCvwDAAAFLklEQVR4nO2d2bLbIAxAbYE3sDH//7WFbPfexG4MiCAcnWmnrzkjIRaD2jQMwzAMwzAMwzAMwzAMwzAMwzAMwzAMwzAMwzAMw5wQkHJczewxZh2lhNK/CBOQo1n0JIT74/H/qMV0Z7GU3aCcVPuEE1XDCtVLAhgtpme7H0s1N1U7QjO0L8F7llzGeh1hEG/8Lo7TUmmuSrOfns9xnGXpXxsONPpA/B6OqqstjC6Ax/0ujkNdYQQbKNi2k64qiiEZ+ohi35X+2YcZw/WujmslYewiAliVYrxgJYrdwUmwXsU+RdApUi83oNIE27YvrfB/ZPg8+BJETXnqh9CVzBbTQHgojgiCvtqU9thFJg/CKz3VIMKMEkIXxIWqIpIg2SkjYj+xC816mrJae2aiWGykxRNsW0UwiJghJDljYI5CD8GRiCtIsJxizYUPQ2pzItZy5pcisTRdk/a9m4amtNNfBuQkdVhSaYqfpNTSFGfb9GRIakrE2Pm+GFLaCQPqiu0OpWP+HMPQQcgQMiQprWXNmsVwIjQjYi/ZrhAqNTCgr2gu0Jnz85RSSjso0HkMFZ0YZjKkc26a/jlmh9JiDyDxi9oeorTYAzZkwwoMz19pzj9bnH/GP/+qbchjSGflneWYhtTuKdMOmNKZcJ5TjInQKcYXnESd/jQxy0ENpULTNGOGgxpap/oyw9pbUAqhfx2Dbkhovvfgz4iUzoM9+GlK6/Mh4q29hyC1mwro30hpVVLPF9wYQr71RazOeM5/cw81iBRD+A03aM9/C/obbrKjbYSpCmIVG3qT/Q8oeUo3Rz0IL7vI1tEbCB9pSiu8I/aV8x3Kg/BGWrWp4ZVs0nZfmAoEG4h/61yHYIJiFSl6Q0Vk6tTW1N8kYp8hdOkfHYYMXd2Qft+8CYwqYDSKvqIh+MCF8Wgca2u/cwdgeW3TtuVn6+1oBs3yLo5C2JpK6CvQzGpfUkz9UG/87gCsi5o2LIXolxN0FbwAsjOLEr+YJmXn7iR6N0BCt5p5cMxm7eAsfS+/CACQf4CTpKjzgkvr2cVarVTf96372yut7XLJ1sa7lv6VcfgYrWaxqr3Wlo1S6pvStr22sxOtTNPLzdY3nj20bPP+ejFdJYkLsjGLdtPBEbe/mr2bQKiXWJDroA+vtzc0p9aahuwqHMDYrQEXHEw9jwQl3drMpts9JBU1SdktPe5FBRdJQ6bwXBpa57ib2A8kukQDzMjh++Uo7Fo6Wd02Pkf4fknqoo4HtvAIjsqUcjx6DIPgWCaOML9rKI/oqD9/lgNrn+eF+p7j8tnzHBiR7+kdUGw/+V1Kzkc75mMy6U+FMaxjPibiM1U1uGM+puInHpmALZCgP4pt7i840MV8+0R1zPsRB6UTcqpizncYwZ89syDydfyWCwXB1l8/zRNGWbTG/GHKUm9AkxHMc/EGSk3z2+ArEhPEV5TUBLEvUGFcjEUH80J/jveTGOAJEljJbILWGQT3zRYiwuKsUXN1EEJAzBhRJFll7mBUG7KD8EqPkKekBREaL8hMDZLQSG6AQjtHPYmvTQnX0TtpC1SYCe2YdkkyLP3jj5BSbKiuR585eQhTgoje6yIb0Yb0C+mV6EYvebqw5SDy2WmubogZiF2AVxPC2FpDf8H2Q9QWo6IkjUxTWVEI3WY/wrCeSuqJ+eRWzXR/JXwgVjUMozbCOfoEZiSiKVGepqv5CJ8RyR4D7xBeamqa7z3BJ/z17JxuBPdv93d/a2Ki878MMAzDMAzDMAzDMAzDMF/KP09VUmxBAiI3AAAAAElFTkSuQmCC"
-                         id="image_view" class="default_img">
-                </div>
-                <div class="image_tag">프로필 사진</div>
-                <input type="text" class="c_input_box input_line" id="name"  required placeholder="이름">
-                <input type="text" class="c_input_box input_line" id="mbti"  required placeholder="MBTI">
-                <input type="text" class="c_input_box input_line" id="github_url"  required placeholder="github 주소">
-                <input type="text" class="c_input_box input_line" id="blog_url"  required placeholder="블로그 주소">
-                <input type="text" class="c_input_box input_line" id="comment"  required placeholder="한마디">
-                <button id="addUserBtn" class="c_button">등록하기</button>
-            </div>
+            <div class="image_tag">프로필 사진</div>
+            <input type="text" class="c_input_box input_line" id="name" required placeholder="이름">
+            <input type="text" class="c_input_box input_line" id="mbti" required placeholder="MBTI">
+            <input type="text" class="c_input_box input_line" id="github_url" required placeholder="github 주소">
+            <input type="text" class="c_input_box input_line" id="blog_url" required placeholder="블로그 주소">
+            <input type="text" class="c_input_box input_line" id="comment" required placeholder="한마디">
+            <button id="addUserBtn" class="c_button">등록하기</button>
         </div>
     </div>
+</div>
 
-    <script>
-        function getCImageFiles(event) {
-            const file = event.currentTarget.files[0];
+<script>
+    function getCImageFiles(event) {
+        const file = event.currentTarget.files[0];
 
-            if (!file.type.match("image/.*")) {
-                alert('이미지 파일만 업로드가 가능합니다.');
-                $('#character_image').val("");
-                return
-            }
-
-            let container = document.getElementById('character_image_box');
-
-            //이미 img 가 있다면, 
-            // URL.revokeObjectURL(objectUrl)
-            // img 삭제하기.
-            const character_image_view = document.getElementById('character_image_view');
-            if (character_image_view != null) {
-                if (character_image_view.className === "") { URL.revokeObjectURL(character_image_view.src); };
-                container.removeChild(character_image_view);
-            }
-
-            let character_image_box = document.createElement("img"); //새 이미지 추가
-
-            //이미지 source 가져오기
-            character_image_box.src = URL.createObjectURL(file);
-            character_image_box.id = "character_image_view"
-            character_image_box.style.width = "400px";
-            character_image_box.style.height = "600px";
-            character_image_box.style.objectFit = "cover";
-
-            //이미지를 div에 추가
-            container.appendChild(character_image_box);
+        if (!file.type.match("image/.*")) {
+            alert('이미지 파일만 업로드가 가능합니다.');
+            $('#character_image').val("");
+            return
         }
 
-        function getImageFiles(event) {
-            const file = event.currentTarget.files[0];
+        let container = document.getElementById('character_image_box');
 
-            if (!file.type.match("image/.*")) {
-                alert('이미지 파일만 업로드가 가능합니다.');
-                $('#image').val("");
-                return
+        //이미 img 가 있다면,
+        // URL.revokeObjectURL(objectUrl)
+        // img 삭제하기.
+        const character_image_view = document.getElementById('character_image_view');
+        if (character_image_view != null) {
+            if (character_image_view.className === "") {
+                URL.revokeObjectURL(character_image_view.src);
             }
-
-            let container = document.getElementById('image_box');
-
-            //이미 img 가 있다면, 
-            // URL.revokeObjectURL(objectUrl)
-            // img 삭제하기.
-            const image_view = document.getElementById('image_view');
-            if (image_view != null) {
-                if (image_view.className === "") { URL.revokeObjectURL(image_view.src); };
-                container.removeChild(image_view);
-            }
-
-            let image_box = document.createElement("img"); //새 이미지 추가
-
-            //이미지 source 가져오기
-            image_box.src = URL.createObjectURL(file);
-            image_box.id = "image_view"
-            image_box.style.width = "280px";
-            image_box.style.height = "280px";
-            image_box.style.objectFit = "cover";
-
-            //이미지를 div에 추가
-            container.appendChild(image_box);
+            ;
+            container.removeChild(character_image_view);
         }
 
-        const character_image_upload = document.querySelector('.character_image_upload');
-        const character_image_box = document.querySelector('#character_image_box');
+        let character_image_box = document.createElement("img"); //새 이미지 추가
 
-        const image_upload = document.querySelector('.image_upload');
-        const image_box = document.querySelector('#image_box');
-    
-        character_image_box.addEventListener('click', () => character_image_upload.click());
-        character_image_upload.addEventListener('change', getCImageFiles);
+        //이미지 source 가져오기
+        character_image_box.src = URL.createObjectURL(file);
+        character_image_box.id = "character_image_view"
+        character_image_box.style.width = "400px";
+        character_image_box.style.height = "600px";
+        character_image_box.style.objectFit = "cover";
 
-        image_box.addEventListener('click', () => image_upload.click());
-        image_upload.addEventListener('change', getImageFiles);
-    </script>
+        //이미지를 div에 추가
+        container.appendChild(character_image_box);
+    }
+
+    function getImageFiles(event) {
+        const file = event.currentTarget.files[0];
+
+        if (!file.type.match("image/.*")) {
+            alert('이미지 파일만 업로드가 가능합니다.');
+            $('#image').val("");
+            return
+        }
+
+        let container = document.getElementById('image_box');
+
+        //이미 img 가 있다면,
+        // URL.revokeObjectURL(objectUrl)
+        // img 삭제하기.
+        const image_view = document.getElementById('image_view');
+        if (image_view != null) {
+            if (image_view.className === "") {
+                URL.revokeObjectURL(image_view.src);
+            }
+            ;
+            container.removeChild(image_view);
+        }
+
+        let image_box = document.createElement("img"); //새 이미지 추가
+
+        //이미지 source 가져오기
+        image_box.src = URL.createObjectURL(file);
+        image_box.id = "image_view"
+        image_box.style.width = "280px";
+        image_box.style.height = "280px";
+        image_box.style.objectFit = "cover";
+
+        //이미지를 div에 추가
+        container.appendChild(image_box);
+    }
+
+    const character_image_upload = document.querySelector('.character_image_upload');
+    const character_image_box = document.querySelector('#character_image_box');
+
+    const image_upload = document.querySelector('.image_upload');
+    const image_box = document.querySelector('#image_box');
+
+    character_image_box.addEventListener('click', () => character_image_upload.click());
+    character_image_upload.addEventListener('change', getCImageFiles);
+
+    image_box.addEventListener('click', () => image_upload.click());
+    image_upload.addEventListener('change', getImageFiles);
+</script>
 </body>
 </html>

@@ -17,7 +17,7 @@ body {
 .description {
     color: #fff;
     font-size: 25px;
-    padding-bottom: 20px;
+    padding-bottom: 25px;
 }
 
 .addCharacter {
@@ -75,7 +75,7 @@ body {
     justify-content: center;
     width: 280px;
     height: 280px;
-    object-fit: cover;
+    object-fit: contain;
     border-radius: 20px 20px;
 }
 
