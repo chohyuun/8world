@@ -30,15 +30,17 @@
             </span>
         </div>
         <div class="addCharacter" id="detailData">
-            <div class="area1">
-                <div class="topp" id="q1">
-                    여기에 이미지 추가 나와야디는데
+
+            <div class="area1" id="qq1">
+                <div class="area1a" id="q1">
                 </div>
             </div>
             <div class="area2" id="q2">
             </div>
         </div>
         <div class="button">
+            <button class="c_button" id="imgChange">캐릭터</button>
+            <button class="c_button" id="imgChange2">사진</button>
             <button class="c_button" id="admendBtn">수정</button>
             <button class="c_button" id="deleteBtn">삭제</button>
         </div>
@@ -193,6 +195,41 @@
         window.location.href = "mainPage.html";
 
     });
+
+    // 이미지 변환 관련
+
+
+    $('#imgChange').on('click', () => {
+        const element = document.getElementById("q1");
+        element.remove();
+
+        const sss = `
+        <div class="area1a" id="q1">
+                </div>
+        `
+        $('#qq1').append(sss);
+
+        document.getElementById('q1').innerHTML = `
+      <img src="${userData.character_image}"/>
+     `
+    });
+
+    $('#imgChange2').on('click', () => {
+        const element = document.getElementById("q1");
+        element.remove();
+
+        const sss = `
+        <div class="area1a" id="q1">
+                </div>
+        `
+        $('#qq1').append(sss);
+
+        document.getElementById('q1').innerHTML = `
+      <img src="${userData.image}"/>
+     `
+    });
+
+
 
 </script>
 </body>
