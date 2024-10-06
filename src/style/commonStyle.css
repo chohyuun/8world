@@ -9,9 +9,15 @@ class 명에 추가해서 사용해 주세요!*/
     font-style: normal;
 }
 
+.main {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
 
 body {
-    height: 100vh;
+    height: 100%;
     background-image: url('../img/backgroundGif.gif');
     background-size: cover;
     padding: 3rem 5rem;
@@ -28,7 +34,6 @@ body {
     width: 100%;
 }
 
-/* todo: 나중에 이름 변경하기*/
 .c_input_box_area {
     display: flex;
     flex-direction: row;
@@ -84,8 +89,6 @@ body {
     font-size: 22px;
 }
 
-
-
 /* icon style */
 .c_icon_s {
     width: 30px;
@@ -120,4 +123,28 @@ body {
     height: 40px;
     position: absolute;
     left: 100px;
+}
+
+.title {
+    font-size: 40px;
+    color: #fff;
+}
+
+.description {
+    color: #fff;
+    font-size: 25px;
+    padding-bottom: 20px;
+}
+
+.header {
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+
+    span{
+        margin-left: -40px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
 }

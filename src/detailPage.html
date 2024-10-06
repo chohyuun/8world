@@ -14,7 +14,7 @@
     <!--common style, js 파일 import-->
     <link href="style/commonStyle.css" rel="stylesheet" />
     <link href="style/detailPageStyle.css" rel="stylesheet" />
-    <title>8Woårld-상세</title>
+    <title>8World-상세</title>
 
 
 
@@ -23,7 +23,7 @@
 <body>
 
     <div class="main">
-        <div class="header"> <img src="img/home.svg" class="home_icon" id="mainBtn" />
+        <div class="header"> <img src="img/home.svg" class="c_home_icon" id="mainBtn" />
             <span>
                 <div class="title">팀 원 정 보</div>
                 <div class="description">informatoin</div>
@@ -49,8 +49,8 @@
         <div id="modalContent">
             <p>팀원을 삭제합니다.</p>
             <div class="modalFooter">
-                <button class="c_button" id="modalCloseBtn">닫기</button>
-                <button class="c_button" id="modalDeleteBtn">삭제</button>
+                <button class="c_button c_button_s" id="modalCloseBtn">닫기</button>
+                <button class="c_button c_button_s" id="modalDeleteBtn">삭제</button>
             </div>
         </div>
     </div>
@@ -62,8 +62,8 @@
     // Firebase SDK 라이브러리 가져오기
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
     import { getFirestore } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
-    import { collection, addDoc, query, where } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
-    import { getDocs, getDoc } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+    import { collection, query, where } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+    import { getDocs } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
     import { doc, deleteDoc } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
 
 
@@ -101,18 +101,6 @@
 
     //전체 데이터 가져오기  나중에 삭제
     let docs = await getDocs(collection(db, "user"));
-    docs.forEach((doc) => {
-        let row = doc.data();
-
-        let blog_url = row['blog_url'];
-        let character_image = row['character'];
-        let comment = row['comment'];
-        let github_url = row['github_url'];
-        let mbti = row['mbti'];
-        let name = row['name'];
-        let image = row['image'];
-
-    });
 
     // receivedData: url parameter 로 받아온 사용자 캐릭터 사진 문자열만 저장하기 위한 변수
     const receivedData = location.href.substring(location.href.indexOf('?') + 1);
@@ -135,7 +123,7 @@
 
 
     // 이미지 노출 테스트
-    var asd = document.getElementById('q1').innerHTML = `
+    document.getElementById('q1').innerHTML = `
       <img src="${userData.image}"/>
      `
 
@@ -148,26 +136,39 @@
 
         const rrow = doc.data();
 
-        console.log(rrow);
-
-        const character_image = rrow['character'];
         const comment = rrow['comment'];
         const github_url = rrow['github_url'];
         const mbti = rrow['mbti'];
         const name = rrow['name'];
-        const image = rrow['image'];
         const blog_url = rrow['blog_url'];
 
         const data4 = `  <div class="area2a" >
-                            <p class="content">이름<br>${name}</p><br>
-                            <p class="content">MBTI<br>${mbti}</p><br>
-                            <p class="content">한마디<br>${comment}</p>   
+                            <p class="content">이름<div class="content_text">${name}</div></p>
+                            <p class="content">MBTI<div class="content_text">${mbti}</div></p>
+                            <p class="content">한마디<div class="content_text">${comment}</div></p>
                         </div>
                         <div class="area2b" id="q2">
-                            <button class="icon" id="imgChange"><img class="iconn" src="img/icon-chra.png"></button>
-                             <button class="icon" id="imgChange2"><img class="iconn" src="img/icon-photo.png"></button>
-                              <a href="${github_url}"><img class="img-github" src="img/icon-github.png" alt="..." /></a>
-                              <a href="${blog_url}"><img class="img-velog" src="img/icon-velog.png" alt=".." /></a>
+                            <div>
+                                <button class="icon" id="imgChange">
+                                    <div>캐릭터 이미지</div>
+                                    <img class="iconn" src="img/icon-chra.png" />
+                                </button>
+                                <button class="icon" id="imgChange2">
+                                    <div>프로필 이미지</div>
+                                    <img class="iconn" src="img/icon-photo.png" />
+                                </button>
+                            </div>
+                            <div>
+                                <a class="icon" href="${github_url}">
+                                    <div>Github</div>
+                                    <img class="img-github" src="img/icon-github.png" alt="..." />
+                                </a>
+                                <a class="icon" href="${blog_url}">
+                                    <div>Blog</div>
+                                    <img class="img-velog" src="img/icon-velog.png" alt=".." />
+                                </a>
+                            </div>
+
                         </div>`
         $('#q2').append(data4);
     })
@@ -179,26 +180,17 @@
     });
 
     $('#admendBtn').on('click', () => {
-
+        location.href = `addPage.html?${userData.user_id}`;
     });
 
 
     $('#modalDeleteBtn').on('click', async () => {
-
-        async function plzdelete() {
-            await deleteDoc(doc(db, "user", userData));
-
-        }
-
         await deleteDoc(doc(db, "user", userData.user_id));
         alert("유저 데이터가 삭제 되었습니다.")
         window.location.href = "mainPage.html";
-
     });
 
     // 이미지 변환 관련
-
-
     $('#imgChange').on('click', () => {
         const element = document.getElementById("q1");
         element.remove();
@@ -210,8 +202,8 @@
         $('#qq1').append(sss);
 
         document.getElementById('q1').innerHTML = `
-      <img src="${userData.character_image}"/>
-     `
+            <img src="${userData.character_image}"/>
+        `
     });
 
     $('#imgChange2').on('click', () => {

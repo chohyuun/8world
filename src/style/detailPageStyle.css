@@ -1,14 +1,4 @@
 /* detailPage의 css 입니다. */
-
-.main {
-    height: calc(100vh - 96px);
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    
-}
-
 .slider {
     max-width: 100%;
     position: relative;
@@ -25,20 +15,6 @@
     margin: auto;
 }
 
-.c_character_image {
-    position: relative;
-    top: 0;
-    left: 0;
-    height: calc(100vh - 300px);
-    width: 500px;
-    object-fit: contain;
-}
-
-.title {
-    font-size: 25px;
-    font-weight: 800;
-}
-
 .slider button {
     background-color: unset;
     color: #000000;
@@ -48,40 +24,42 @@
         background-color: unset;
         color: #727272;
     }
-
-
-
 }
 
-.img-github,
-.img-velog  {
-    width: 85px;
-margin: 0px 20px 0px 3px;
-}
-
-
-
-.icon{
-    width: 85px;
-    height: 85px;
-    margin: 0px 20px 0px 3px;
-    background-color: transparent;
+.icon {
+    width: 100px;
+    margin: 10px 20px;
     border: none;
+    background-color: unset;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+
+    div {
+        width: 100px;
+        text-align: center;
+    }
+
+    img {
+        width: 100%;
+        height: 60px;
+        object-fit: contain;
+    }
 }
-
-.iconn {
-    width: 85px;
-    height: 85px;
-
-}
-
 
 
 /*  modal  관련 */
 #modalBtn,
 #modalCloseBtn {
     cursor: pointer;
+}
 
+.c_button {
+    margin: 0 20px 0 0;
+}
+
+.modalFooter {
+    text-align: center;
 }
 
 #modalContainer {
@@ -97,12 +75,18 @@ margin: 0px 20px 0px 3px;
 }
 
 #modalContent {
-    position: absolute;
-    background-color: #8a9aa7;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    background-color: #fff;
     width: 300px;
     height: 150px;
-    padding: 15px;
+    padding: 20px;
+    border-radius: 10px;
 
+    p {
+        margin: 20px 10px;
+    }
 }
 
 #modalContainer.hidden {
@@ -124,45 +108,42 @@ margin: 0px 20px 0px 3px;
 }
 
 .area1 {
-    height: 100%;
-    width: 600PX;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
     align-items: center;
-    border-style: groove;
-    background-color: transparent;
-    border-width: 10px;
-    border-color: white;
     overflow: hidden;
+    border: 5px solid white;
+    border-radius: 20px;
+    margin-right: 20px;
+
+    img {
+        width: 400px;
+        height: 600px;
+        object-fit: contain;
+    }
 }
 
 .area2 {
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
     background-color: transparent;
     height: 100%;
     width: 40%;
+    padding: 20px;
 }
 
 .area2a {
-    color: white;
-    width: 400px;
-    height: 70%;
-    background-color: transparent;
-    word-break: break-all;
-    min-width: 100%;
-    position: relative;
     display: flex;
     flex-direction: column;
-    margin: auto;
-    align-items: center;
     overflow: hidden;
     justify-content: center;
     object-fit: contain;
-    border: 2 solid black;
     border-radius: 20px;
-    margin-top: 5PX;
-    font-size: x-large;
+    color: #fff;
 
+    .content {
+        margin: 5px 0 5px 0;
+        font-size: 25px;
+    }
 }
 
 #q1 {
@@ -170,23 +151,24 @@ margin: 0px 20px 0px 3px;
 }
 
 .area2b {
-    height: 20%;
-    background-color: bisque;
+    width: 100%;
     display: flex;
     flex-direction: row;
     justify-content: center;
     align-items: center;
     border-radius: 20px;
+    padding: 10px 20px;
+    border: 5px solid white;
 
-
-
+    button, a {
+        flex: 1;
+        color: #fff;
+    }
 }
 
-
-
 .addCharacter {
-    min-width: 100%;
-    height: 800px;
+    width: 1300px;
+    height: 640px;
     position: relative;
     display: flex;
     flex-direction: row;
@@ -199,28 +181,5 @@ margin: 0px 20px 0px 3px;
     border-radius: 20px;
 }
 
-.topp {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    margin: 40px 2px 2px 2px;
-}
 
 
-.home_icon {
-    display: flex;
-    flex-direction: column;
-    cursor: pointer;
-    width: 50px;
-    height: 50px;
-    background-color: #fff;
-    position: absolute;
-    left: 100px;
-}
-
-
-.content {
-    margin: 5px 0px 5px 0px;
-
-}
