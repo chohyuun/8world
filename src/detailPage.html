@@ -4,30 +4,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 
     <!--common style, js 파일 import-->
-    <link href="style/commonStyle.css" rel="stylesheet"/>
-    <link href="style/detailPageStyle.css" rel="stylesheet"/>
+    <link href="style/commonStyle.css" rel="stylesheet" />
+    <link href="style/detailPageStyle.css" rel="stylesheet" />
     <title>8Woårld-상세</title>
+
 
 
 </head>
 
 <body>
 
-<div class="main">
-    <div class="header"><img src="img/home.svg" class="home_icon" id="mainBtn"/>
-        <span>
+    <div class="main">
+        <div class="header"> <img src="img/home.svg" class="home_icon" id="mainBtn" />
+            <span>
                 <div class="title">팀 원 정 보</div>
                 <div class="description">informatoin</div>
             </span>
-<<<<<<< HEAD
         </div>
         <div class="addCharacter" id="detailData">
 
@@ -39,49 +39,33 @@
             </div>
         </div>
         <div class="button">
-            <button class="c_button" id="imgChange">캐릭터</button>
-            <button class="c_button" id="imgChange2">사진</button>
             <button class="c_button" id="admendBtn">수정</button>
             <button class="c_button" id="deleteBtn">삭제</button>
-=======
+        </div>
     </div>
-    <div class="addCharacter" id="detailData">
-        <div class="area1">
-            <div class="topp" id="q1">
-                여기에 이미지 추가 나와야디는데
+
+    <!-- MODAL   -->
+    <div id="modalContainer" class="hidden">
+        <div id="modalContent">
+            <p>팀원을 삭제합니다.</p>
+            <div class="modalFooter">
+                <button class="c_button" id="modalCloseBtn">닫기</button>
+                <button class="c_button" id="modalDeleteBtn">삭제</button>
             </div>
         </div>
-        <div class="area2" id="q2">
->>>>>>> 8c5d81aea8c4dbe2821a57ff2736db65d96bca54
-        </div>
     </div>
-    <div class="button">
-        <button class="c_button" id="admendBtn">수정</button>
-        <button class="c_button" id="deleteBtn">삭제</button>
-    </div>
-</div>
-
-<!-- MODAL   -->
-<div id="modalContainer" class="hidden">
-    <div id="modalContent">
-        <p>팀원을 삭제합니다.</p>
-        <div class="modalFooter">
-            <button class="c_button" id="modalCloseBtn">닫기</button>
-            <button class="c_button" id="modalDeleteBtn">삭제</button>
-        </div>
-    </div>
-</div>
 
 </body>
 
 <script type="module">
 
     // Firebase SDK 라이브러리 가져오기
-    import {initializeApp} from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
-    import {getFirestore} from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
-    import {collection, addDoc, query, where} from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
-    import {getDocs, getDoc} from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
-    import {doc, deleteDoc} from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
+    import { getFirestore } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+    import { collection, addDoc, query, where } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+    import { getDocs, getDoc } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+    import { doc, deleteDoc } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+
 
 
     // Firebase 구성 정보 설정
@@ -140,12 +124,14 @@
         userArray.push(doc.data());
     });
 
+
     // user 데이터 중에 이미지가 같은 유저의 데이터를 사용
     userArray.forEach((e) => {
         if (e['character_image'] === receivedData) {
             userData = e;
         }
     })
+
 
 
     // 이미지 노출 테스트
@@ -178,6 +164,8 @@
                             <p class="content">한마디<br>${comment}</p>   
                         </div>
                         <div class="area2b" id="q2">
+                            <button class="icon" id="imgChange"><img class="iconn" src="img/icon-chra.png"></button>
+                             <button class="icon" id="imgChange2"><img class="iconn" src="img/icon-photo.png"></button>
                               <a href="${github_url}"><img class="img-github" src="img/icon-github.png" alt="..." /></a>
                               <a href="${blog_url}"><img class="img-velog" src="img/icon-velog.png" alt=".." /></a>
                         </div>`
@@ -191,14 +179,21 @@
     });
 
     $('#admendBtn').on('click', () => {
-        location.href = `addPage.html?${userData.user_id}`;
+
     });
 
 
     $('#modalDeleteBtn').on('click', async () => {
+
+        async function plzdelete() {
+            await deleteDoc(doc(db, "user", userData));
+
+        }
+
         await deleteDoc(doc(db, "user", userData.user_id));
         alert("유저 데이터가 삭제 되었습니다.")
         window.location.href = "mainPage.html";
+
     });
 
     // 이미지 변환 관련

@@ -53,14 +53,29 @@
 
 }
 
-
-
-
 .img-github,
-.img-velog {
+.img-velog  {
     width: 85px;
 margin: 0px 20px 0px 3px;
 }
+
+
+
+.icon{
+    width: 85px;
+    height: 85px;
+    margin: 0px 20px 0px 3px;
+    background-color: transparent;
+    border: none;
+}
+
+.iconn {
+    width: 85px;
+    height: 85px;
+
+}
+
+
 
 /*  modal  관련 */
 #modalBtn,
