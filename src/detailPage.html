@@ -181,22 +181,19 @@
     });
 
 
-    $('#modalDeleteBtn').on('click', () => {
-
-        var deleteName = userData.name;
+    $('#modalDeleteBtn').on('click', async () => {
 
         async function plzdelete() {
             await deleteDoc(doc(db, "user", userData));
 
         }
 
-        const onDelete = async () => {
-            await deleteDoc(doc(db, "user", userData));
-        };
-        console.log("유저 데이터가 삭제 되었습니다.")
-        // window.location.href = "mainPage.html";
+        await deleteDoc(doc(db, "user", userData.user_id));
+        alert("유저 데이터가 삭제 되었습니다.")
+        window.location.href = "mainPage.html";
 
     });
+
 </script>
 </body>
 
