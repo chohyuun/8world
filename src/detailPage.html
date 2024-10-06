@@ -63,21 +63,17 @@
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
     import { getFirestore } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
     import { collection, query, where } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
-    import { getDocs } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+    import { getDoc, getDocs } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
     import { doc, deleteDoc } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
-
-
 
     // Firebase 구성 정보 설정
     const firebaseConfig = {
-
         apiKey: "AIzaSyDBzg-CgJ_rurOKVL3QsX14yfRyat4fy6c",
         authDomain: "world-6960c.firebaseapp.com",
         projectId: "world-6960c",
         storageBucket: "world-6960c.appspot.com",
         messagingSenderId: "892743835529",
         appId: "1:892743835529:web:b4eef016af8ecfb8884b58"
-
     };
 
 
@@ -98,29 +94,10 @@
         modal.classList.add('hidden');
     });
 
-
-    //전체 데이터 가져오기  나중에 삭제
-    let docs = await getDocs(collection(db, "user"));
-
     // receivedData: url parameter 로 받아온 사용자 캐릭터 사진 문자열만 저장하기 위한 변수
     const receivedData = location.href.substring(location.href.indexOf('?') + 1);
-    let userArray = []; // 받아온 정보와 비교를 위해 user 데이터를 모두 저장하는 변수
-    let userData; // 클릭 된 유저의 정보를 저장하는 변수
-
-    docs.forEach((doc) => {
-        // db에 존재하는 데이터 Array로 저장
-        userArray.push(doc.data());
-    });
-
-
-    // user 데이터 중에 이미지가 같은 유저의 데이터를 사용
-    userArray.forEach((e) => {
-        if (e['character_image'] === receivedData) {
-            userData = e;
-        }
-    })
-
-
+    const data = await getDoc(doc(db, "user", receivedData)); // get user data
+    let userData = data.data(); // 클릭한 유저 데이터
 
     // 이미지 노출 테스트
     document.getElementById('q1').innerHTML = `
