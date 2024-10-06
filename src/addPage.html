@@ -43,8 +43,9 @@
         let userArray = [];
         let maxNum = 0; // 사용자 id 추가를 위한 num check
         // todo: 상세 화면 완료 되면 수정
-        let updateUser; // 수정 버튼으로 넘어온 사용자의 경우 사용할 변수
-        // let updateUser = doc(db, 'user', '10');
+        const parameter = location.href.indexOf('?')
+        let updateUser = parameter !== -1 ?
+            doc(db, 'user', location.href.substring(location.href.indexOf('?') + 1)) : undefined; // 수정 버튼으로 넘어온 사용자의 경우 사용할 변수
         let updateUserData;
 
         data.forEach((doc) => {
