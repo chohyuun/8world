@@ -144,6 +144,10 @@
         margin: 5px 0 5px 0;
         font-size: 25px;
     }
+
+    .content_text {
+        font-size: 35px;
+    }
 }
 
 #q1 {
@@ -180,6 +184,8 @@
     border: 5px solid transparent;
     border-radius: 20px;
 }
+
+
 
 
 
